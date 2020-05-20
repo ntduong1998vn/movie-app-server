@@ -1,0 +1,80 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/movie-db?useSSL=false
+    username: root
+    password: 123456
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: gcltt10@gmail.com
+    password: bkxsbogdhlnvqnry
+    properties:
+      mail:
+        debug: true
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 12MB
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 858667922847-s05fcdggmh0k486pbdkp1tdllkh259so.apps.googleusercontent.com
+            clientSecret: w3KU6N2hY-DLQoOx6ks8_6wA
+            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+          facebook:
+            clientId: 513099212588576
+            clientSecret: 97858327cc7866de0bf2c0ee7d6e1962
+            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - public_profile
+          github:
+            clientId: fe3f2d2f2ed7402df66e
+            clientSecret: e57ca55b5d3259ffbf4587acec28d26a33e32c71
+            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - user:email
+              - read:user
+        provider:
+          facebook:
+            authorizationUri: https://www.facebook.com/v3.0/dialog/oauth
+            tokenUri: https://graph.facebook.com/v3.0/oauth/access_token
+            userInfoUri: https://graph.facebook.com/v3.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
+logging:
+  level:
+    org:
+      hibernate:
+#        SQL: DEBUG
+#        type: TRACE
+app:
+  firebase-configuration-file: private-key-firebase.json
+  storageUrl: movie-app-d4c77.appspot.com
+  auth:
+    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
+    tokenExpirationMsec: 1800000 # 1800000 = 30 minutes
+  oauth2:
+    # After successfully authenticating with the OAuth2 Provider,
+    # we'll be generating an auth token for the user and sending the token to the
+    # redirectUri mentioned by the client in the /oauth2/authorize request.
+    # We're not using cookies because they won't work well in mobile clients.
+    authorizedRedirectUris:
+      - http://localhost:3000/oauth2/redirect
+      - myandroidapp://oauth2/redirect
+      - myiosapp://oauth2/redirect
