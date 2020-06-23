@@ -1,4 +1,4 @@
-package ntduong.movieappserver.dto;
+package ntduong.movieappserver.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;

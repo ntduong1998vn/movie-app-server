@@ -1,18 +1,15 @@
 package ntduong.movieappserver.controller;
 
 import ntduong.movieappserver.dto.CommentDTO;
-import ntduong.movieappserver.repository.CommentRepository;
+import ntduong.movieappserver.dto.request.CommentRequest;
 import ntduong.movieappserver.service.ICommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping(path = "/api/comment")
+@RequestMapping(value = "/api/comment")
 public class CommentController {
 
     private ICommentService service;
@@ -23,8 +20,8 @@ public class CommentController {
     }
 
 
-    // localhost:8080/api/comment/?movieId=_&userId=_&currentPage=_&pageSize=_
-    @GetMapping("/")
+    // localhost:8080/api/comment/search?movieId=__&userId=__&currentPage=__&pageSize=__
+    @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
     public Page<CommentDTO> getCommentsByMovieID(@RequestParam(name = "movieId", defaultValue = "-1") int movieId,
                                                  @RequestParam(name = "userId", defaultValue = "-1") int userId,
@@ -42,9 +39,9 @@ public class CommentController {
 
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    public String createComment(@RequestBody CommentDTO comment) {
+    public String createComment(@RequestBody CommentRequest comment) {
+
         return "Thành công";
     }
-
 
 }

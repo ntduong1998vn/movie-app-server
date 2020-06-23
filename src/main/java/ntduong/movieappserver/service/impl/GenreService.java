@@ -2,45 +2,40 @@ package ntduong.movieappserver.service.impl;
 
 import ntduong.movieappserver.dto.GenreDTO;
 import ntduong.movieappserver.model.Genre;
+import ntduong.movieappserver.model.Movie;
 import ntduong.movieappserver.repository.GenreRepository;
 import ntduong.movieappserver.service.IGenreService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.Set;
 
 @Service
 public class GenreService implements IGenreService {
 
-    private GenreRepository repository;
+    private GenreRepository genreRepository;
 
     @Autowired
-    public GenreService(GenreRepository repository) {
-        this.repository = repository;
-    }
-
-    @Override
-    public Genre add(Genre genre) {
-        return repository.save(genre);
+    public GenreService(GenreRepository genreRepository) {
+        this.genreRepository = genreRepository;
     }
 
     @Override
     public boolean delete(int id) {
-        Optional<Genre> result = repository.findById(id);
+        Optional<Genre> result = genreRepository.findById(id);
         if (result.isPresent()) {
-            Genre genre = result.get();
+//            Genre deletedGenre = result.get();
 //            Delete all relationships with the others movie
-//            Set<Movie> movies = genre.getMovies();
-//            for (Movie movie : genre.getMovies()) {
-//                movie.getGenres().remove(genre);
+//            Set<Movie> movies = deletedGenre.getMoviesGenres();
+//            List<Movie> movies = new ArrayList<>(deletedGenre.getMoviesGenres());
+//            for (Movie movie : movies) {
+//                movie.removeGenre(deletedGenre);
 //            }
             // Delete this genre
-            repository.deleteById(id);
+            genreRepository.deleteById(id);
             return true;
         }
         return false;
@@ -48,37 +43,35 @@ public class GenreService implements IGenreService {
 
     @Override
     public Genre update(int id, GenreDTO newGenre) {
-        Optional<Genre> rs = repository.findById(id);
+        Optional<Genre> rs = genreRepository.findById(id);
         if (rs.isPresent()) {
             Genre updateGenre = rs.get();
             updateGenre.setName(newGenre.getName());
-           return repository.save(updateGenre);
+           return genreRepository.save(updateGenre);
         }
         return null;
     }
 
     @Override
-    public Page<Genre> findAll(int page, int size) {
-        Pageable pageable = (Pageable) PageRequest.of(page,size);
-        return repository.findAll(pageable);
+    public List<Genre> findAll() {
+        return genreRepository.findAll();
     }
 
     @Override
     public Optional<Genre> findById(int id) {
-        return repository.findById(id);
+        return genreRepository.findById(id);
     }
 
     @Override
     public List<Genre> findByName(String name) {
-        return repository.findByNameLike(name);
+        return genreRepository.findByNameContainsIgnoreCase(name);
     }
 
     @Override
-    public boolean save(Genre genre) {
-        Genre isExist = repository.findByNameIgnoreCase(genre.getName());
+    public boolean create(Genre genre) {
+        Genre isExist = genreRepository.findByNameIgnoreCase(genre.getName());
         if(isExist != null) return false;
-
-        repository.save(genre);
+        genreRepository.save(genre);
         return true;
     }
 

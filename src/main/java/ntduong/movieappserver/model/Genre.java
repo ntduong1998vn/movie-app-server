@@ -6,7 +6,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 @Entity
 @Table(name = "genres")
@@ -23,9 +22,14 @@ public class Genre implements Serializable {
     private String name;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @JoinTable(
+            name = "genres_movies",
+            joinColumns = @JoinColumn(name = "genre_id"),
+            inverseJoinColumns = @JoinColumn(name = "movie_id"))
     private Set<Movie> moviesGenres ;
 
     public void addMovie(Movie movie){
@@ -37,7 +41,5 @@ public class Genre implements Serializable {
         this.moviesGenres.remove(movie);
         movie.getGenres().remove(this);
     }
-
-
 
 }

@@ -1,5 +1,6 @@
 package ntduong.movieappserver.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -27,6 +28,7 @@ public class Source implements Serializable {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     @JoinColumns({
             @JoinColumn(name = "movie_id",referencedColumnName = "movie_id"),
             @JoinColumn(name = "episode_id",referencedColumnName = "episode_id")
@@ -38,7 +40,7 @@ public class Source implements Serializable {
     @NotNull
     @Enumerated
     @Column(columnDefinition = "smallint")
-    SourceType type;
+    SourceType server;
 
     String src;
     String label;

@@ -1,13 +1,13 @@
 package ntduong.movieappserver.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ntduong.movieappserver.model.Episode;
+import ntduong.movieappserver.model.Genre;
 
-import javax.persistence.Lob;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Getter
@@ -16,14 +16,13 @@ import java.util.*;
 @AllArgsConstructor
 public class MovieDTO {
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-
     int id;
     String title;
     String quality;
     float imdb;
     int runtime;
-    String release_date;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    Date release_date;
     String overview;
     float popularity;
     String language;
@@ -31,6 +30,7 @@ public class MovieDTO {
     int view;
     String nation;
     int adult;
-
-    Set<GenreDTO> genres = new HashSet<>();
+    boolean visible;
+    Set<Genre> genres = new HashSet<>();
+    Set<EpisodeDTO> episodes = new HashSet<>();
 }

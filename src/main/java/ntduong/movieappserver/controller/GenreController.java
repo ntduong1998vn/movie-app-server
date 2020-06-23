@@ -3,7 +3,6 @@ package ntduong.movieappserver.controller;
 import ntduong.movieappserver.dto.ApiResponse;
 import ntduong.movieappserver.dto.GenreDTO;
 import ntduong.movieappserver.model.Genre;
-import ntduong.movieappserver.repository.GenreRepository;
 import ntduong.movieappserver.service.impl.GenreService;
 import ntduong.movieappserver.service.IGenreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,19 +28,17 @@ public class GenreController {
 
     @GetMapping("/")
     @ResponseStatus(HttpStatus.OK)
-    public Page<Genre> getAll(@RequestParam(name = "currentPage",defaultValue = "0")int page,
-                                              @RequestParam(name = "pageSize",defaultValue = "10")int size) {
-        if(page!=0) page -= 1;
-        return service.findAll(page, size);
+    public List<Genre> getAll() {
+        return service.findAll();
     }
 
     @PostMapping("/")
-    public ResponseEntity<String> addNew(@RequestBody @Valid GenreDTO genreForm){
+    public ResponseEntity<String> addNew(@RequestBody @Valid GenreDTO genreForm) {
         Genre genre = new Genre();
         genre.setName(genreForm.getName());
-        boolean rs = service.save(genre);
+        boolean rs = service.create(genre);
 
-        if(rs) return ResponseEntity.status(HttpStatus.CREATED).body("Tạo thành công");
+        if (rs) return ResponseEntity.status(HttpStatus.CREATED).body("Tạo thành công");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Xuất hiện lỗi");
     }
 
@@ -56,9 +53,9 @@ public class GenreController {
 
     @PutMapping("/{genreId}")
     public ResponseEntity<String> update(@PathVariable int genreId,
-                                    @Valid @RequestBody GenreDTO genreDTO) {
-        Genre result = service.update(genreId,genreDTO);
-        if(result ==null)
+                                         @Valid @RequestBody GenreDTO genreDTO) {
+        Genre result = service.update(genreId, genreDTO);
+        if (result == null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Can't find genre with id=" + genreId);
         return ResponseEntity.ok("Cập nhật thành công!");
     }
@@ -66,9 +63,9 @@ public class GenreController {
     @DeleteMapping("/{genreId}")
     public ApiResponse delete(@PathVariable int genreId) {
         boolean result = service.delete(genreId);
-        if (result) return new ApiResponse(HttpStatus.OK,"Xoá thành công!");
+        if (result) return new ApiResponse(HttpStatus.OK, "Xoá thành công!");
 
-        return new ApiResponse(HttpStatus.NOT_FOUND,"Xóa thất bại!");
+        return new ApiResponse(HttpStatus.NOT_FOUND, "Xóa thất bại!");
     }
 
     @GetMapping("/search")

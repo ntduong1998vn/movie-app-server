@@ -1,5 +1,9 @@
 package ntduong.movieappserver.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -20,11 +24,13 @@ public class Episode implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("movie_id")
+    @JsonBackReference
     @JoinColumn(name = "movie_id")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Movie movie;
+    private Movie movieEpisode;
 
     @OneToMany(mappedBy = "episode",fetch = FetchType.LAZY,orphanRemoval = true)
+    @JsonManagedReference
     Set<Source> sources;
 }

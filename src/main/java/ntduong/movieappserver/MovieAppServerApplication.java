@@ -1,25 +1,21 @@
 package ntduong.movieappserver;
 
 import lombok.RequiredArgsConstructor;
-import ntduong.movieappserver.model.Comment;
-import ntduong.movieappserver.model.Genre;
-import ntduong.movieappserver.model.Movie;
-import ntduong.movieappserver.model.User;
-import ntduong.movieappserver.repository.CommentRepository;
-import ntduong.movieappserver.repository.GenreRepository;
-import ntduong.movieappserver.repository.MovieRepository;
+import ntduong.movieappserver.config.AppProperties;
 import ntduong.movieappserver.repository.UserRepository;
-import ntduong.movieappserver.util.SearchCriteria;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-
-import java.util.*;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 @RequiredArgsConstructor
+@EnableConfigurationProperties(AppProperties.class)
+@EnableJpaAuditing
 public class MovieAppServerApplication implements CommandLineRunner {
 
     @Bean
@@ -32,10 +28,8 @@ public class MovieAppServerApplication implements CommandLineRunner {
     }
 
 
-    private final MovieRepository movieRepository;
-    private final CommentRepository commentRepository;
-    private final GenreRepository genreRepository;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) throws Exception {

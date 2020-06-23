@@ -10,17 +10,16 @@ import java.util.Optional;
 
 public interface IGenreService {
 
-    public Genre add(Genre genre);
+    // Get all genre
+    public List<Genre> findAll();
 
     public boolean delete(int id);
 
     public Genre update(int id, GenreDTO newGenre);
 
-    public Page<Genre> findAll(int page, int size);
-
     public Optional<Genre> findById(int id);
 
     public List<Genre> findByName(String name);
 
-    public boolean save(Genre genre);
+    public boolean create(Genre genre);
 }

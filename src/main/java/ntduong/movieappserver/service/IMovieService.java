@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface IMovieService {
 
-    public Page<MovieDTO> findAll(int page, int size);
+    public Page<MovieDTO> findByPage(int page, int size);
 
     public boolean deleteById(int id);
 
@@ -19,17 +19,11 @@ public interface IMovieService {
 
     public boolean update(int movieId, MovieDTO movieDTO);
 
-    public Page<Movie> getTopView(int page, int limit);
-
-    public Page<MovieDTO> getMoviesByGenreId(int id, int page, int limit);
-
-    public boolean addGenres(int movieId, List<Integer> addList);
-
-    public boolean removeGenres(int movieId, List<Integer> deleteList);
+    public Page<MovieDTO> findByGenreId(int id, int page, int limit);
 
     public List<Movie> findByTitle(String keyword);
 
-    public List<Movie> findByLetterBegin(String letter);
-
     public List<MovieDTO> searchCriteria(String search);
+
+    public void save(MovieDTO movie,boolean isUpdate);
 }

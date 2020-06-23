@@ -20,7 +20,7 @@ spring:
       max-file-size: 10MB
       max-request-size: 12MB
   jpa:
-    show-sql: true
+#    show-sql: true
     hibernate:
       ddl-auto: update
       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
@@ -61,13 +61,13 @@ logging:
   level:
     org:
       hibernate:
-#        SQL: DEBUG
+        SQL: DEBUG
 #        type: TRACE
 app:
   firebase-configuration-file: private-key-firebase.json
   storageUrl: movie-app-d4c77.appspot.com
   auth:
-    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
+    tokenSecret: "NguyenTrieuDuong2020vn"
     tokenExpirationMsec: 1800000 # 1800000 = 30 minutes
   oauth2:
     # After successfully authenticating with the OAuth2 Provider,

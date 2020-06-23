@@ -1,13 +1,14 @@
 package ntduong.movieappserver.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -20,7 +21,6 @@ public class Movie implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
-
     String title;
     String quality;
     float imdb;
@@ -34,25 +34,32 @@ public class Movie implements Serializable {
     int view;
     String nation;
     int adult;
+    @Column(columnDefinition = "tinyint(4) default 1")
+    boolean visible = true;
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.LAZY ,
+            mappedBy = "moviesGenres",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @JoinTable(
-            name = "genres_movies",
-            joinColumns = @JoinColumn(name = "movie_id"),
-            inverseJoinColumns = @JoinColumn(name = "genre_id"))
     Set<Genre> genres;
 
-    @OneToMany(mappedBy = "movieComment",fetch = FetchType.LAZY,orphanRemoval = true)
+    @OneToMany(mappedBy = "movieComment",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    Set<Comment> movieComments;
+    List<Comment> movieComments;
 
-    @OneToMany(mappedBy = "movie",fetch = FetchType.LAZY,orphanRemoval = true)
+    @OneToMany(mappedBy = "movieEpisode",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    @JsonManagedReference
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    Set<Episode> episodes;
+    List<Episode> episodes;
 
     public void addGenre(Genre genre) {
         this.genres.add(genre);
