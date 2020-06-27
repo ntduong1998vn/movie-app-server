@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-interface IMovieService {
+public interface IMovieService {
 
     Page<MovieDTO> findByPage(int page, int size);
 
