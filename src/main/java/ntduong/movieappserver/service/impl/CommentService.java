@@ -44,7 +44,7 @@ public class CommentService implements ICommentService {
 
     @Override
     public Page<CommentDTO> findByMovieIdAndUserId(int movieId, int userId, int currentPage, int pageSize) {
-        return commentRepository.findCommentByCommentIdAndUserId(movieId, userId,
+        return commentRepository.findCommentByMovieIdAndUserId(movieId, userId,
                 PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.DESC, "createAt")));
     }
 

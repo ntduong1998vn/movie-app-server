@@ -14,7 +14,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
             "FROM Comment c " +
             "INNER JOIN c.userComment u " +
             "INNER JOIN c.movieComment m " +
-            "WHERE c.movieComment.id = :movieId")
+            "WHERE m.id = :movieId")
     Page<CommentDTO> findCommentByMovieId(@Param("movieId") int movieId,
                                           Pageable page);
 
@@ -29,8 +29,8 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
             "FROM Comment c " +
             "INNER JOIN c.movieComment m " +
             "INNER JOIN c.userComment u " +
-            "WHERE m.id = :commentId AND u.id = :userId")
-    Page<CommentDTO> findCommentByCommentIdAndUserId(@Param("commentId") int commentId,
+            "WHERE m.id = :movieId AND u.id = :userId")
+    Page<CommentDTO> findCommentByMovieIdAndUserId(@Param("movieId") int movieId,
                                                      @Param("userId") int userId,
                                                      Pageable page);
 
