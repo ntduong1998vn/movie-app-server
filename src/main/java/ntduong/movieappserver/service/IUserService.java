@@ -1,6 +1,6 @@
 package ntduong.movieappserver.service;
 
-import ntduong.movieappserver.model.User;
+import ntduong.movieappserver.entity.User;
 
 public interface IUserService {
 

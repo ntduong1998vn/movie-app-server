@@ -1,23 +1,19 @@
 package ntduong.movieappserver.service.impl;
 
 import ntduong.movieappserver.dto.MovieDTO;
-import ntduong.movieappserver.exception.MovieErrorException;
 import ntduong.movieappserver.exception.ResourceNotFoundException;
-import ntduong.movieappserver.model.Genre;
-import ntduong.movieappserver.model.Movie;
+import ntduong.movieappserver.entity.Genre;
+import ntduong.movieappserver.entity.Movie;
 import ntduong.movieappserver.repository.GenreRepository;
 import ntduong.movieappserver.repository.MovieRepository;
 import ntduong.movieappserver.service.IMovieService;
 import ntduong.movieappserver.util.SearchCriteria;
-import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -74,7 +70,7 @@ public class MovieService implements IMovieService {
 
     @Override
     public MovieDTO findById(int id) {
-        Movie result = movieRepository.findById(id);
+        Movie result = movieRepository.findById(id).orElse(null);
         if (result != null)
             return modelMapper.map(result, MovieDTO.class);
         else
@@ -124,7 +120,7 @@ public class MovieService implements IMovieService {
     @Override
     public void save(MovieDTO movie, boolean isUpdate) {
         if (isUpdate) {
-            Movie oldMovie = movieRepository.findById(movie.getId());
+            Movie oldMovie = movieRepository.findById(movie.getId()).orElse(null);
             if (oldMovie == null)
                 throw new ResourceNotFoundException("MOVIE", "ID", movie.getId());
             else {

@@ -2,8 +2,7 @@ package ntduong.movieappserver.util;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
-import ntduong.movieappserver.model.Movie;
+import ntduong.movieappserver.entity.Movie;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Root;

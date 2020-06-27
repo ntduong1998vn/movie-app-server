@@ -1,6 +1,6 @@
 package ntduong.movieappserver.repository.custom;
 
-import ntduong.movieappserver.model.Movie;
+import ntduong.movieappserver.entity.Movie;
 import ntduong.movieappserver.util.SearchCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +15,7 @@ public interface MovieRepositoryCustom {
 
     List<Movie> searchMovie(List<SearchCriteria> params);
 
-    public Movie findById(int movieId);
+//    Movie findById(int movieId);
 
     Page<Movie> findByGenreId(int genreId, Pageable pageRequest);
 }

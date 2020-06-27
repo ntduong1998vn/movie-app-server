@@ -2,11 +2,9 @@ package ntduong.movieappserver.controller;
 
 import ntduong.movieappserver.dto.ApiResponse;
 import ntduong.movieappserver.dto.GenreDTO;
-import ntduong.movieappserver.model.Genre;
-import ntduong.movieappserver.service.impl.GenreService;
+import ntduong.movieappserver.entity.Genre;
 import ntduong.movieappserver.service.IGenreService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,45 +17,64 @@ import java.util.Optional;
 @RequestMapping("/api/genre")
 public class GenreController {
 
+    @Autowired
     private IGenreService service;
 
-    @Autowired
-    public GenreController(GenreService genreService) {
-        this.service = genreService;
-    }
-
     @GetMapping("/")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Genre> getAll() {
-        return service.findAll();
+    public ApiResponse<List<Genre>> getAll() {
+        ApiResponse<List<Genre>> apiResponse = new ApiResponse<>();
+        apiResponse.setSuccess(HttpStatus.OK);
+        apiResponse.setResult(service.findAll());
+        return apiResponse;
     }
 
     @PostMapping("/")
-    public ResponseEntity<String> addNew(@RequestBody @Valid GenreDTO genreForm) {
-        Genre genre = new Genre();
-        genre.setName(genreForm.getName());
-        boolean rs = service.create(genre);
-
-        if (rs) return ResponseEntity.status(HttpStatus.CREATED).body("Tạo thành công");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Xuất hiện lỗi");
+    public ApiResponse<String> addNew(@RequestBody @Valid GenreDTO genreForm) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        if (service.create(genreForm)) {
+            apiResponse.setSuccess(HttpStatus.CREATED);
+            apiResponse.setMessage("Tạo thành công");
+        } else {
+            apiResponse.setSuccess(HttpStatus.BAD_REQUEST);
+            apiResponse.setMessage("Xuất hiện lỗi");
+        }
+        return apiResponse;
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getOne(@PathVariable int id) {
+    public ApiResponse<Genre> getOne(@PathVariable int id) {
+        ApiResponse<Genre> apiResponse = new ApiResponse<>();
         Optional<Genre> result = service.findById(id);
         if (result.isPresent()) {
-            return ResponseEntity.ok(result.get());
+            apiResponse.setSuccess(HttpStatus.OK);
+            apiResponse.setResult(result.get());
+        } else {
+            apiResponse.setSuccess(HttpStatus.NOT_FOUND);
+            apiResponse.setMessage("Không tìm thấy thể loại với id = " + id);
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Can't find genre with id=" + id);
+        return apiResponse;
     }
 
     @PutMapping("/{genreId}")
-    public ResponseEntity<String> update(@PathVariable int genreId,
-                                         @Valid @RequestBody GenreDTO genreDTO) {
-        Genre result = service.update(genreId, genreDTO);
-        if (result == null)
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Can't find genre with id=" + genreId);
-        return ResponseEntity.ok("Cập nhật thành công!");
+    public ApiResponse<Genre> update(@PathVariable int genreId,
+                                     @Valid @RequestBody GenreDTO genreDTO) {
+        ApiResponse<Genre> apiResponse = new ApiResponse<>();
+
+        if (genreDTO.getName().trim().length() <= 45) {
+            Genre result = service.update(genreDTO);
+            if (result == null) {
+                apiResponse.setSuccess(HttpStatus.BAD_REQUEST);
+                apiResponse.setMessage("Cập nhật không thành công");
+            } else {
+                apiResponse.setSuccess(HttpStatus.OK);
+                apiResponse.setMessage("Cập nhật thành công");
+                apiResponse.setResult(result);
+            }
+        } else {
+            apiResponse.setSuccess(HttpStatus.BAD_REQUEST);
+            apiResponse.setMessage("Tên thể loại chưa nhập hoặc dài hơn 45 ký tự");
+        }
+        return apiResponse;
     }
 
     @DeleteMapping("/{genreId}")

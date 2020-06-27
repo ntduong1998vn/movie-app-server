@@ -1,10 +1,9 @@
 package ntduong.movieappserver.service;
 
 import ntduong.movieappserver.exception.ResourceNotFoundException;
-import ntduong.movieappserver.model.User;
+import ntduong.movieappserver.entity.User;
 import ntduong.movieappserver.repository.UserRepository;
 import ntduong.movieappserver.security.UserPrincipal;
-import ntduong.movieappserver.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

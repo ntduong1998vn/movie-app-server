@@ -1,29 +1,28 @@
 package ntduong.movieappserver.service;
 
 import ntduong.movieappserver.dto.MovieDTO;
-import ntduong.movieappserver.model.Movie;
+import ntduong.movieappserver.entity.Movie;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface IMovieService {
+interface IMovieService {
 
-    public Page<MovieDTO> findByPage(int page, int size);
+    Page<MovieDTO> findByPage(int page, int size);
 
-    public boolean deleteById(int id);
+    boolean deleteById(int id);
 
-    public MovieDTO findById(int id);
+    MovieDTO findById(int id);
 
-    public Movie create(Movie movie);
+    Movie create(Movie movie);
 
-    public boolean update(int movieId, MovieDTO movieDTO);
+    boolean update(int movieId, MovieDTO movieDTO);
 
-    public Page<MovieDTO> findByGenreId(int id, int page, int limit);
+    Page<MovieDTO> findByGenreId(int id, int page, int limit);
 
-    public List<Movie> findByTitle(String keyword);
+    List<Movie> findByTitle(String keyword);
 
-    public List<MovieDTO> searchCriteria(String search);
+    List<MovieDTO> searchCriteria(String search);
 
-    public void save(MovieDTO movie,boolean isUpdate);
+    void save(MovieDTO movie,boolean isUpdate);
 }

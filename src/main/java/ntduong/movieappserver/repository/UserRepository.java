@@ -1,6 +1,6 @@
 package ntduong.movieappserver.repository;
 
-import ntduong.movieappserver.model.User;
+import ntduong.movieappserver.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

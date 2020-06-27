@@ -1,4 +1,4 @@
-package ntduong.movieappserver.model;
+package ntduong.movieappserver.entity;
 
 
 import lombok.Data;

@@ -4,15 +4,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import ntduong.movieappserver.dto.ApiResponse;
 import ntduong.movieappserver.dto.MovieDTO;
-import ntduong.movieappserver.model.Movie;
-import ntduong.movieappserver.service.impl.MovieService;
+import ntduong.movieappserver.entity.Movie;
+import ntduong.movieappserver.service.IMovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -22,7 +21,7 @@ import java.util.List;
 public class MovieController {
 
     @Autowired
-    private MovieService movieService;
+    private IMovieService movieService;
 
     @ApiOperation(value = "Get list movie by page")
     @GetMapping("/")

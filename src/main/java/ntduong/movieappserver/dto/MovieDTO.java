@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ntduong.movieappserver.model.Episode;
-import ntduong.movieappserver.model.Genre;
+import ntduong.movieappserver.entity.Genre;
 
 import java.util.*;
 

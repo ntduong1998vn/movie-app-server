@@ -1,12 +1,10 @@
 package ntduong.movieappserver.repository;
 
-import ntduong.movieappserver.model.Genre;
-import ntduong.movieappserver.model.Movie;
+import ntduong.movieappserver.entity.Movie;
 import ntduong.movieappserver.repository.custom.MovieRepositoryCustom;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

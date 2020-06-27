@@ -1,7 +1,7 @@
 package ntduong.movieappserver.service.impl;
 
-import ntduong.movieappserver.model.Role;
-import ntduong.movieappserver.model.User;
+import ntduong.movieappserver.entity.Role;
+import ntduong.movieappserver.entity.User;
 import ntduong.movieappserver.repository.RoleRepository;
 import ntduong.movieappserver.repository.UserRepository;
 import ntduong.movieappserver.service.IUserService;

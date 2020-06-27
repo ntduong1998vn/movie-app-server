@@ -1,4 +1,4 @@
-package ntduong.movieappserver.model;
+package ntduong.movieappserver.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,11 +19,8 @@ public class BaseEntity implements Serializable {
 
     @CreatedDate
     private Date createdAt;
-
     @LastModifiedDate
     private Date updatedAt;
-
     private Long createdBy;
-
     private Long updatedBy;
 }

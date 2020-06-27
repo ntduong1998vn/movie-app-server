@@ -1,9 +1,7 @@
 package ntduong.movieappserver.repository.custom;
 
-import ntduong.movieappserver.model.Episode;
-import ntduong.movieappserver.model.Genre;
-import ntduong.movieappserver.model.Movie;
-import ntduong.movieappserver.model.Source;
+import ntduong.movieappserver.entity.Genre;
+import ntduong.movieappserver.entity.Movie;
 import ntduong.movieappserver.util.MovieSearchQueryCriteriaConsumer;
 import ntduong.movieappserver.util.SearchCriteria;
 import org.springframework.data.domain.Page;
@@ -12,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.List;
 
@@ -61,27 +58,27 @@ public class MovieRepositoryImpl implements MovieRepositoryCustom {
 
     }
 
-    @Override
-    public Movie findById(int movieId) {
-//        Query q = this.entityManager.createQuery("select m " +
-//                "from Movie m left join fetch m.genres g " +
-//                "left join fetch m.episodes " +
-//                "where m.id = :id");
-//        q.setParameter("id",movieId);
-//        return (Movie) q.getSingleResult();
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Movie> query = builder.createQuery(Movie.class);
-        Root<Movie> root = query.from(Movie.class);
-        Fetch<Movie,Genre> genreFetch = root.fetch("genres",JoinType.LEFT);
-        Fetch<Movie,Episode> episodeFetch = root.fetch("episodes",JoinType.LEFT);
-//        Fetch<Episode,Source> sourceFetch = episodeFetch.fetch("sources",JoinType.LEFT);
-        Predicate condition = builder.equal(root.get("id"), movieId);
-        query
-                .select(root)
-                .where(condition);
-        TypedQuery<Movie> typedQuery = entityManager.createQuery(query);
-        return (Movie) typedQuery.getSingleResult();
-    }
+//    @Override
+//    public Movie findById(int movieId) {
+////        Query q = this.entityManager.createQuery("select m " +
+////                "from Movie m left join fetch m.genres g " +
+////                "left join fetch m.episodes " +
+////                "where m.id = :id");
+////        q.setParameter("id",movieId);
+////        return (Movie) q.getSingleResult();
+//        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+//        CriteriaQuery<Movie> query = builder.createQuery(Movie.class);
+//        Root<Movie> root = query.from(Movie.class);
+//        Fetch<Movie,Genre> genreFetch = root.fetch("genres",JoinType.LEFT);
+//        Fetch<Movie,Episode> episodeFetch = root.fetch("episodes",JoinType.LEFT);
+////        Fetch<Episode,Source> sourceFetch = episodeFetch.fetch("sources",JoinType.LEFT);
+//        Predicate condition = builder.equal(root.get("id"), movieId);
+//        query
+//                .select(root)
+//                .where(condition);
+//        TypedQuery<Movie> typedQuery = entityManager.createQuery(query);
+//        return (Movie) typedQuery.getSingleResult();
+//    }
 
     @Override
     public Page<Movie> findByGenreId(int genreId, Pageable pageRequest) {

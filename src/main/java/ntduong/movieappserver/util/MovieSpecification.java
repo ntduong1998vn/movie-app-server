@@ -1,7 +1,7 @@
 package ntduong.movieappserver.util;
 
 import lombok.AllArgsConstructor;
-import ntduong.movieappserver.model.Movie;
+import ntduong.movieappserver.entity.Movie;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;

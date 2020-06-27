@@ -1,4 +1,4 @@
-package ntduong.movieappserver.model;
+package ntduong.movieappserver.exception;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

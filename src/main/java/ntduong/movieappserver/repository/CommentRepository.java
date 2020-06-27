@@ -1,28 +1,37 @@
 package ntduong.movieappserver.repository;
 
 import ntduong.movieappserver.dto.CommentDTO;
-import ntduong.movieappserver.model.Comment;
+import ntduong.movieappserver.entity.Comment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
-import java.util.List;
+import org.springframework.data.repository.query.Param;
 
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
-    @Query("select new ntduong.movieappserver.dto.CommentDTO(c.id,u.id,u.name,u.imageUrl,c.content) " +
-            "from Comment c inner join c.userComment u " +
-            "where c.movieComment.id = :movieId")
-    Page<CommentDTO> findCommentByMovieComment_Id(int movieId, Pageable page);
+    @Query("SELECT new ntduong.movieappserver.dto.CommentDTO(c.id,u.id,m.id,u.name,u.imageUrl,c.content,c.createAt) " +
+            "FROM Comment c " +
+            "INNER JOIN c.userComment u " +
+            "INNER JOIN c.movieComment m " +
+            "WHERE c.movieComment.id = :movieId")
+    Page<CommentDTO> findCommentByMovieId(@Param("movieId") int movieId,
+                                          Pageable page);
 
-    List<Comment> findCommentByUserComment_Id(int userId);
+    @Query("SELECT new ntduong.movieappserver.dto.CommentDTO(c.id,u.id,m.id,u.name,u.imageUrl,c.content,c.createAt) " +
+            "FROM Comment c " +
+            "INNER JOIN c.userComment u " +
+            "INNER JOIN c.movieComment m " +
+            "WHERE c.userComment.id = :userId")
+    Page<CommentDTO> findCommentByUserId(@Param("userId") int userId, Pageable page);
 
-    @Query("select new ntduong.movieappserver.dto.CommentDTO(c.id,u.id,u.name,u.imageUrl,c.content) " +
-            "from Comment c " +
-            "join c.movieComment m " +
-            "join c.userComment u " +
-            "where m.id = :commentId and u.id = :userId")
-    Page<CommentDTO> findCommentByMovieComment_IdAndUserComment_Id(int commentId,int userId,Pageable page);
+    @Query("SELECT new ntduong.movieappserver.dto.CommentDTO(c.id,u.id,m.id,u.name,u.imageUrl,c.content,c.createAt) " +
+            "FROM Comment c " +
+            "INNER JOIN c.movieComment m " +
+            "INNER JOIN c.userComment u " +
+            "WHERE m.id = :commentId AND u.id = :userId")
+    Page<CommentDTO> findCommentByCommentIdAndUserId(@Param("commentId") int commentId,
+                                                     @Param("userId") int userId,
+                                                     Pageable page);
 
 }

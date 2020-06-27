@@ -2,11 +2,9 @@ package ntduong.movieappserver.util;
 
 import io.jsonwebtoken.*;
 import ntduong.movieappserver.config.AppProperties;
-import ntduong.movieappserver.model.User;
 import ntduong.movieappserver.security.UserPrincipal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;

@@ -1,8 +1,7 @@
 package ntduong.movieappserver.repository.custom;
 
-import ntduong.movieappserver.model.Genre;
-import ntduong.movieappserver.model.Movie;
-import ntduong.movieappserver.repository.custom.GenreRepositoryCustom;
+import ntduong.movieappserver.entity.Genre;
+import ntduong.movieappserver.entity.Movie;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;

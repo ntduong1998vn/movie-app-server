@@ -1,20 +1,21 @@
 package ntduong.movieappserver.service.impl;
 
 import ntduong.movieappserver.dto.GenreDTO;
-import ntduong.movieappserver.model.Genre;
-import ntduong.movieappserver.model.Movie;
+import ntduong.movieappserver.entity.Genre;
 import ntduong.movieappserver.repository.GenreRepository;
 import ntduong.movieappserver.service.IGenreService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class GenreService implements IGenreService {
+
+    @Autowired
+    ModelMapper modelMapper;
 
     private GenreRepository genreRepository;
 
@@ -42,12 +43,10 @@ public class GenreService implements IGenreService {
     }
 
     @Override
-    public Genre update(int id, GenreDTO newGenre) {
-        Optional<Genre> rs = genreRepository.findById(id);
+    public Genre update(GenreDTO updateGenre) {
+        Optional<Genre> rs = genreRepository.findById(updateGenre.getId());
         if (rs.isPresent()) {
-            Genre updateGenre = rs.get();
-            updateGenre.setName(newGenre.getName());
-           return genreRepository.save(updateGenre);
+           return genreRepository.save(modelMapper.map(updateGenre,Genre.class));
         }
         return null;
     }
@@ -68,11 +67,11 @@ public class GenreService implements IGenreService {
     }
 
     @Override
-    public boolean create(Genre genre) {
-        Genre isExist = genreRepository.findByNameIgnoreCase(genre.getName());
-        if(isExist != null) return false;
-        genreRepository.save(genre);
+    public boolean create(GenreDTO genreDTO) {
+        Optional<Genre> optionalGenre = genreRepository.findByNameIgnoreCase(genreDTO.getName());
+        if(optionalGenre.isPresent())
+            return false;
+        genreRepository.save(modelMapper.map(genreDTO,Genre.class));
         return true;
     }
-
 }

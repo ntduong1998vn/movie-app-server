@@ -1,6 +1,6 @@
 package ntduong.movieappserver.util;
 
-import ntduong.movieappserver.model.Movie;
+import ntduong.movieappserver.entity.Movie;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;

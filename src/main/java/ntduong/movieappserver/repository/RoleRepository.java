@@ -1,6 +1,6 @@
 package ntduong.movieappserver.repository;
 
-import ntduong.movieappserver.model.Role;
+import ntduong.movieappserver.entity.Role;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

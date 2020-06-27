@@ -1,8 +1,8 @@
 package ntduong.movieappserver.security;
 
 import lombok.*;
-import ntduong.movieappserver.model.Role;
-import ntduong.movieappserver.model.User;
+import ntduong.movieappserver.entity.Role;
+import ntduong.movieappserver.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
