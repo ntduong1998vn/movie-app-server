@@ -2,7 +2,6 @@ package ntduong.movieappserver.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import ntduong.movieappserver.dto.ApiResponse;
-import ntduong.movieappserver.dto.ErrorResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
