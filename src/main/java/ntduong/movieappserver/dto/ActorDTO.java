@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,4 +17,6 @@ public class ActorDTO {
     private String name;
     private String avatar;
     private String nation;
+
+    List<CharacterDTO> characters;
 }

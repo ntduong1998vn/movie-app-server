@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "actors")
@@ -21,4 +22,8 @@ public class ActorEntity implements Serializable {
     private String avatar;
     @Column(length = 50)
     private String nation;
+
+    @OneToMany(mappedBy = "actor",fetch = FetchType.LAZY)
+    List<CharacterEntity> characters;
+
 }
