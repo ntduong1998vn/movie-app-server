@@ -37,7 +37,7 @@ public class Movie implements Serializable {
     @Column(columnDefinition = "tinyint(4) default 1")
     boolean visible = true;
 
-    @ManyToMany(fetch = FetchType.LAZY ,
+    @ManyToMany(fetch = FetchType.LAZY,
             mappedBy = "moviesGenres",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @EqualsAndHashCode.Exclude
@@ -60,6 +60,12 @@ public class Movie implements Serializable {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     List<Episode> episodes;
+
+    @OneToMany(mappedBy = "movieCharacter",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    List<CharacterEntity> characters;
 
     public void addGenre(Genre genre) {
         this.genres.add(genre);

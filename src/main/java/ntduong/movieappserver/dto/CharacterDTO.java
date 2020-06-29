@@ -10,20 +10,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ActorForm {
+public class CharacterDTO {
     private int id;
-    private String name;
-    private String nation;
-    private MultipartFile image;
-    @JsonProperty("delete_character_list")
-    List<Integer> deleteCharacterList = new ArrayList<>();
+    @JsonProperty("movie_id")
+    private int movieId;
+    @JsonProperty("actor_id")
+    private int actorId;
+    private String character;
 }

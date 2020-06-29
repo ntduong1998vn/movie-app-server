@@ -8,23 +8,29 @@ package ntduong.movieappserver.util;
 import com.google.cloud.storage.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
 
 @Slf4j
 @Component
-public class UploadImage {
+public class ImageUtil {
     @Autowired
-    Bucket storage;
+    Bucket bucket;
 
     public void uploadImage(String projectId, String bucketName, String fileName, String contentType, InputStream data) {
-        storage.create(bucketName + fileName, data, contentType);
+        bucket.create(bucketName + fileName, data, contentType);
         log.info("File " + fileName + " uploaded to bucket " + bucketName + " as " + fileName);
     }
 
     public void uploadImage(String bucketName, String fileName, String contentType, InputStream data) {
-        storage.create(bucketName + fileName, data, contentType);
+        bucket.create(bucketName + fileName, data, contentType);
         log.info("File " + fileName + " uploaded to bucket " + bucketName + " as " + fileName);
+    }
+
+    public boolean deleteImage(String bucketName,String fileName){
+        Storage storage = bucket.getStorage();
+        return storage.delete(bucketName,fileName);
     }
 }
