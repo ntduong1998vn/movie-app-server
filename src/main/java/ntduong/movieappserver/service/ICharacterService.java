@@ -20,4 +20,6 @@ public interface ICharacterService {
     List<CharacterDTO> findByActorId(int actorId);
 
     List<CharacterDTO> findByMovieId(int movieId);
+
+    void deleteByActorId(int actorId);
 }

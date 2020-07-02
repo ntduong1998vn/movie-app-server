@@ -6,15 +6,15 @@ package ntduong.movieappserver.controller;
 
 import io.swagger.annotations.ApiOperation;
 import ntduong.movieappserver.dto.ActorDTO;
-import ntduong.movieappserver.dto.ActorForm;
+import ntduong.movieappserver.dto.form.ActorForm;
 import ntduong.movieappserver.dto.ApiResponse;
+import ntduong.movieappserver.exception.ResourceNotFoundException;
 import ntduong.movieappserver.service.IActorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/actors")
@@ -27,7 +27,7 @@ public class ActorController {
     @GetMapping("/")
     public Page<ActorDTO> getListActors(@RequestParam(name = "currentPage", defaultValue = "0") int currentPage,
                                         @RequestParam(name = "pageSize", defaultValue = "6") int pageSize) {
-        return actorService.getList(currentPage,pageSize);
+        return actorService.getList(currentPage, pageSize);
     }
 
     @ApiOperation("FIND ACTOR BY ID")
@@ -58,7 +58,7 @@ public class ActorController {
                 apiResponse.setSuccess(HttpStatus.BAD_REQUEST);
                 apiResponse.setMessage(e.getMessage());
             }
-        }else{
+        } else {
             apiResponse.setSuccess(HttpStatus.BAD_REQUEST);
             apiResponse.setMessage("Field INVALID.");
         }
@@ -82,4 +82,18 @@ public class ActorController {
         return apiResponse;
     }
 
+    @ApiOperation("DELETE A ACTOR")
+    @DeleteMapping("/{id}")
+    public ApiResponse<String> delete(@PathVariable int id) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        try {
+            actorService.deleteOne(id);
+            apiResponse.setSuccess(HttpStatus.OK);
+            apiResponse.setMessage("Thành công.");
+        } catch (ResourceNotFoundException e) {
+            apiResponse.setSuccess(HttpStatus.BAD_REQUEST);
+            apiResponse.setMessage(e.getMessage());
+        }
+        return apiResponse;
+    }
 }

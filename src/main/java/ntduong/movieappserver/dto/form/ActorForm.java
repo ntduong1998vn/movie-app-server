@@ -3,7 +3,12 @@
  * @Email: ntduong1998vn@gmail.com
  */
 
-package ntduong.movieappserver.dto;
+/*
+ * @Author by Nguyen Trieu Duong
+ * @Email: ntduong1998vn@gmail.com
+ */
+
+package ntduong.movieappserver.dto.form;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -26,4 +31,6 @@ public class ActorForm {
     private MultipartFile image;
     @JsonProperty("delete_character_list")
     List<Integer> deleteCharacterList = new ArrayList<>();
+    @JsonProperty("add_character_list")
+    List<Integer> insertCharacterList = new ArrayList<>();
 }
