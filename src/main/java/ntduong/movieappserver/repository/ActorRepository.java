@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @Repository
 public interface ActorRepository extends JpaRepository<ActorEntity, Integer> {
-    @Query("SELECT a FROM ActorEntity a JOIN FETCH a.characters WHERE a.id = :actorId")
-    Optional<ActorEntity> findById(@Param("actorId") int id);
+    @Query("SELECT a FROM ActorEntity a LEFT JOIN FETCH a.characters WHERE a.id = :actorId")
+    Optional<ActorEntity> getActorAndCharactersById(@Param("actorId") int id);
+
 }

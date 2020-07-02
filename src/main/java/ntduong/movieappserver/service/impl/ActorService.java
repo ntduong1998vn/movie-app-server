@@ -6,9 +6,8 @@ package ntduong.movieappserver.service.impl;
 
 import ntduong.movieappserver.constant.Constants;
 import ntduong.movieappserver.dto.ActorDTO;
-import ntduong.movieappserver.dto.ActorForm;
+import ntduong.movieappserver.dto.form.ActorForm;
 import ntduong.movieappserver.entity.ActorEntity;
-import ntduong.movieappserver.entity.CharacterEntity;
 import ntduong.movieappserver.exception.ResourceNotFoundException;
 import ntduong.movieappserver.repository.ActorRepository;
 import ntduong.movieappserver.service.IActorService;
@@ -19,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -58,7 +58,6 @@ public class ActorService implements IActorService {
     public void update(ActorForm actorForm) throws IOException, ResourceNotFoundException {
         ActorEntity actorEntity = actorRepository.findById(actorForm.getId()).orElse(null);
         if (actorEntity != null) {
-
             // Delete old image and update new image
             MultipartFile file = actorForm.getImage();
             if (actorForm.getImage() != null) {
@@ -70,20 +69,24 @@ public class ActorService implements IActorService {
                     }
                 }
             }
-            // delete logic with CharacterEntity
-            if(!actorForm.getDeleteCharacterList().isEmpty()){
+            // delete association with CharacterEntity
+            if (!actorForm.getDeleteCharacterList().isEmpty()) {
                 characterService.deleteAll(actorForm.getDeleteCharacterList());
             }
-            // TODO : Viet tiep
             actorEntity.setName(actorForm.getName());
             actorEntity.setNation(actorForm.getNation());
             actorRepository.save(actorEntity);
         } else throw new ResourceNotFoundException("Actor", "Id", actorForm.getId());
     }
 
+    @Transactional
     @Override
-    public void deleteOne(int actorId) {
-
+    public void deleteOne(int actorId) throws ResourceNotFoundException{
+        ActorEntity actorEntity = actorRepository.findById(actorId).orElse(null);
+        if (actorEntity !=null) {
+            characterService.deleteByActorId(actorId);
+            actorRepository.delete(actorEntity);
+        } else throw new ResourceNotFoundException("ActorEntity", "Id", actorId);
     }
 
     @Override

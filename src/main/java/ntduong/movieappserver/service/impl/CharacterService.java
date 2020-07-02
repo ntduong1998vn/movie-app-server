@@ -52,4 +52,9 @@ public class CharacterService implements ICharacterService {
     public List<CharacterDTO> findByMovieId(int movieId) {
         return null;
     }
+
+    @Override
+    public void deleteByActorId(int actorId) {
+        characterRepository.deleteByActorId(actorId);
+    }
 }

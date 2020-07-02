@@ -17,13 +17,13 @@ public class ActorEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(length = 50,unique = true)
+    @Column(length = 50, unique = true)
     private String name;
     private String avatar;
     @Column(length = 50)
     private String nation;
 
-    @OneToMany(mappedBy = "actor",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "actor", fetch = FetchType.LAZY)
     List<CharacterEntity> characters;
 
 }
