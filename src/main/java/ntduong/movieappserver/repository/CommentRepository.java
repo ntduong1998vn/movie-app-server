@@ -31,7 +31,9 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
             "INNER JOIN c.userComment u " +
             "WHERE m.id = :movieId AND u.id = :userId")
     Page<CommentDTO> findCommentByMovieIdAndUserId(@Param("movieId") int movieId,
-                                                     @Param("userId") int userId,
-                                                     Pageable page);
+                                                   @Param("userId") int userId,
+                                                   Pageable page);
 
+    @Query("SELECT c FROM Comment c INNER JOIN c.movieComment m WHERE m.id = :movieId")
+    void deleteByMovieId(@Param("movieId") int movieId);
 }

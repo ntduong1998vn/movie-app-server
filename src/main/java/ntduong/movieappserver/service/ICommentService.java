@@ -19,4 +19,6 @@ public interface ICommentService {
     void deleteOne(int commentId);
 
     void deleteList(List<Integer> deleteList);
+
+    void deleteByMovieId(int movieId);
 }

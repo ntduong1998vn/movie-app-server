@@ -2,7 +2,7 @@ package ntduong.movieappserver.service;
 
 
 import ntduong.movieappserver.dto.GenreDTO;
-import ntduong.movieappserver.entity.Genre;
+import ntduong.movieappserver.entity.GenreEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,15 +10,17 @@ import java.util.Optional;
 public interface IGenreService {
 
     // Get all genre
-    public List<Genre> findAll();
+    List<GenreEntity> findAll();
 
-    public boolean delete(int id);
+    boolean delete(int id);
 
-    public Genre update(GenreDTO updateGenre);
+    GenreEntity update(GenreDTO updateGenre);
 
-    public Optional<Genre> findById(int id);
+    Optional<GenreEntity> findById(int id);
 
-    public List<Genre> findByName(String name);
+    List<GenreEntity> findByName(String name);
 
-    public boolean create(GenreDTO genreDTO);
+    boolean create(GenreDTO genreDTO);
+
+    List<GenreDTO> findByMovieId(int movieId);
 }

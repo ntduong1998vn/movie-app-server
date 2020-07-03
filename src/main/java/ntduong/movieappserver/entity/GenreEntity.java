@@ -10,7 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "genres")
 @Data
-public class Genre implements Serializable {
+public class GenreEntity implements Serializable {
 
     private static final long serialVersionUID = 6028372223525640170L;
 
@@ -21,11 +21,8 @@ public class Genre implements Serializable {
     @Column(name = "name",nullable = false)
     private String name;
 
-    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
     @JoinTable(
             name = "genres_movies",
             joinColumns = @JoinColumn(name = "genre_id"),

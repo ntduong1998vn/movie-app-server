@@ -2,7 +2,7 @@ package ntduong.movieappserver.controller;
 
 import ntduong.movieappserver.dto.ApiResponse;
 import ntduong.movieappserver.dto.GenreDTO;
-import ntduong.movieappserver.entity.Genre;
+import ntduong.movieappserver.entity.GenreEntity;
 import ntduong.movieappserver.service.IGenreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,8 +21,8 @@ public class GenreController {
     private IGenreService service;
 
     @GetMapping("/")
-    public ApiResponse<List<Genre>> getAll() {
-        ApiResponse<List<Genre>> apiResponse = new ApiResponse<>();
+    public ApiResponse<List<GenreEntity>> getAll() {
+        ApiResponse<List<GenreEntity>> apiResponse = new ApiResponse<>();
         apiResponse.setSuccess(HttpStatus.OK);
         apiResponse.setResult(service.findAll());
         return apiResponse;
@@ -42,9 +42,9 @@ public class GenreController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<Genre> getOne(@PathVariable int id) {
-        ApiResponse<Genre> apiResponse = new ApiResponse<>();
-        Optional<Genre> result = service.findById(id);
+    public ApiResponse<GenreEntity> getOne(@PathVariable int id) {
+        ApiResponse<GenreEntity> apiResponse = new ApiResponse<>();
+        Optional<GenreEntity> result = service.findById(id);
         if (result.isPresent()) {
             apiResponse.setSuccess(HttpStatus.OK);
             apiResponse.setResult(result.get());
@@ -56,12 +56,12 @@ public class GenreController {
     }
 
     @PutMapping("/{genreId}")
-    public ApiResponse<Genre> update(@PathVariable int genreId,
-                                     @Valid @RequestBody GenreDTO genreDTO) {
-        ApiResponse<Genre> apiResponse = new ApiResponse<>();
+    public ApiResponse<GenreEntity> update(@PathVariable int genreId,
+                                           @Valid @RequestBody GenreDTO genreDTO) {
+        ApiResponse<GenreEntity> apiResponse = new ApiResponse<>();
 
         if (genreDTO.getName().trim().length() <= 45) {
-            Genre result = service.update(genreDTO);
+            GenreEntity result = service.update(genreDTO);
             if (result == null) {
                 apiResponse.setSuccess(HttpStatus.BAD_REQUEST);
                 apiResponse.setMessage("Cập nhật không thành công");
@@ -87,7 +87,7 @@ public class GenreController {
 
     @GetMapping("/search")
     public ResponseEntity<?> searchByName(@RequestParam(name = "name") String name) {
-        List<Genre> result = service.findByName(name);
+        List<GenreEntity> result = service.findByName(name);
         return ResponseEntity.ok(result);
     }
 

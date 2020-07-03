@@ -7,7 +7,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -20,29 +20,54 @@ public class Movie implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
-    String title;
-    String quality;
-    float imdb;
-    int runtime;
-    Date release_date;
-    @Lob
-    String overview;
-    float popularity;
-    String language;
-    String poster;
-    int view;
-    String nation;
-    int adult;
-    @Column(columnDefinition = "tinyint(4) default 1")
-    boolean visible = true;
+    @Column(name = "id", insertable = false, nullable = false)
+    private Integer id;
+
+    @Column(name = "imdb")
+    private Float imdb = 0F;
+
+    @Column(name = "language")
+    private String language = "";
+
+    @Column(name = "nation")
+    private String nation = "";
+
+    @Column(name = "overview")
+    private String overview;
+
+    @Column(name = "popularity")
+    private Float popularity = 0F;
+
+    @Column(name = "poster")
+    private String poster = "";
+
+    @Column(name = "quality")
+    private String quality = "";
+
+    @Column(name = "release_date")
+    private LocalDate releaseDate;
+
+    @Column(name = "runtime")
+    private Integer runtime = 0;
+
+    @Column(name = "title", nullable = false)
+    private String title = "";
+
+    @Column(name = "view")
+    private Integer view = 0;
+
+    @Column(name = "visible")
+    private Integer visible = 1;
+
+    @Column(name = "adult")
+    private Integer adult = 0;
 
     @ManyToMany(fetch = FetchType.LAZY,
             mappedBy = "moviesGenres",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    Set<Genre> genres;
+    Set<GenreEntity> genres;
 
     @OneToMany(mappedBy = "movieComment",
             fetch = FetchType.LAZY,
@@ -56,25 +81,26 @@ public class Movie implements Serializable {
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    @JsonManagedReference
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    List<Episode> episodes;
+    List<EpisodeEntity> episodes;
 
     @OneToMany(mappedBy = "movieCharacter",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             orphanRemoval = true)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     List<CharacterEntity> characters;
 
-    public void addGenre(Genre genre) {
-        this.genres.add(genre);
-        genre.getMoviesGenres().add(this);
+    public void addGenre(GenreEntity genreEntity) {
+        this.genres.add(genreEntity);
+        genreEntity.getMoviesGenres().add(this);
     }
 
-    public void removeGenre(Genre genre) {
-        this.genres.remove(genre);
-        genre.getMoviesGenres().remove(this);
+    public void removeGenre(GenreEntity genreEntity) {
+        this.genres.remove(genreEntity);
+        genreEntity.getMoviesGenres().remove(this);
     }
 
 }

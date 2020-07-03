@@ -5,7 +5,7 @@
 package ntduong.movieappserver.service;
 
 import ntduong.movieappserver.dto.ActorDTO;
-import ntduong.movieappserver.dto.form.ActorForm;
+import ntduong.movieappserver.form.ActorForm;
 import ntduong.movieappserver.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 

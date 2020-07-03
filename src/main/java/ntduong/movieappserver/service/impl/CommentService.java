@@ -89,7 +89,8 @@ public class CommentService implements ICommentService {
         commentRepository.deleteAll(commentList);
     }
 
-    private Comment dtoToEntity(CommentDTO commentDTO) {
-        return null;
+    @Override
+    public void deleteByMovieId(int movieId) {
+        commentRepository.deleteByMovieId(movieId);
     }
 }

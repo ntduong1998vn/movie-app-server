@@ -1,6 +1,6 @@
 package ntduong.movieappserver.repository.custom;
 
-import ntduong.movieappserver.entity.Genre;
+import ntduong.movieappserver.entity.GenreEntity;
 import ntduong.movieappserver.entity.Movie;
 import ntduong.movieappserver.util.MovieSearchQueryCriteriaConsumer;
 import ntduong.movieappserver.util.SearchCriteria;
@@ -48,8 +48,8 @@ public class MovieRepositoryImpl implements MovieRepositoryCustom {
 
         if (movie != null) {
             // Delete all relationship with genre table
-            for (Genre genre : movie.getGenres()) {
-                genre.removeMovie(movie);
+            for (GenreEntity genreEntity : movie.getGenres()) {
+                genreEntity.removeMovie(movie);
             }
             // Delete all comments
             movie.getMovieComments().clear();

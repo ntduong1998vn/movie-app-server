@@ -1,12 +1,14 @@
 package ntduong.movieappserver.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class SourceDTO {
-
+    String id;
     String src;
     String label;
+    String type;
 }

@@ -10,7 +10,7 @@ public interface IMovieService {
 
     Page<MovieDTO> findByPage(int page, int size);
 
-    boolean deleteById(int id);
+    void deleteById(int id) throws Exception;
 
     MovieDTO findById(int id);
 

@@ -1,7 +1,7 @@
 package ntduong.movieappserver.service.impl;
 
 import ntduong.movieappserver.dto.GenreDTO;
-import ntduong.movieappserver.entity.Genre;
+import ntduong.movieappserver.entity.GenreEntity;
 import ntduong.movieappserver.repository.GenreRepository;
 import ntduong.movieappserver.service.IGenreService;
 import org.modelmapper.ModelMapper;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class GenreService implements IGenreService {
@@ -17,16 +18,13 @@ public class GenreService implements IGenreService {
     @Autowired
     ModelMapper modelMapper;
 
+    @Autowired
     private GenreRepository genreRepository;
 
-    @Autowired
-    public GenreService(GenreRepository genreRepository) {
-        this.genreRepository = genreRepository;
-    }
 
     @Override
     public boolean delete(int id) {
-        Optional<Genre> result = genreRepository.findById(id);
+        Optional<GenreEntity> result = genreRepository.findById(id);
         if (result.isPresent()) {
 //            Genre deletedGenre = result.get();
 //            Delete all relationships with the others movie
@@ -43,35 +41,43 @@ public class GenreService implements IGenreService {
     }
 
     @Override
-    public Genre update(GenreDTO updateGenre) {
-        Optional<Genre> rs = genreRepository.findById(updateGenre.getId());
+    public GenreEntity update(GenreDTO updateGenre) {
+        Optional<GenreEntity> rs = genreRepository.findById(updateGenre.getId());
         if (rs.isPresent()) {
-           return genreRepository.save(modelMapper.map(updateGenre,Genre.class));
+            return genreRepository.save(modelMapper.map(updateGenre, GenreEntity.class));
         }
         return null;
     }
 
     @Override
-    public List<Genre> findAll() {
+    public List<GenreEntity> findAll() {
         return genreRepository.findAll();
     }
 
     @Override
-    public Optional<Genre> findById(int id) {
+    public Optional<GenreEntity> findById(int id) {
         return genreRepository.findById(id);
     }
 
     @Override
-    public List<Genre> findByName(String name) {
+    public List<GenreEntity> findByName(String name) {
         return genreRepository.findByNameContainsIgnoreCase(name);
     }
 
     @Override
     public boolean create(GenreDTO genreDTO) {
-        Optional<Genre> optionalGenre = genreRepository.findByNameIgnoreCase(genreDTO.getName());
-        if(optionalGenre.isPresent())
+        Optional<GenreEntity> optionalGenre = genreRepository.findByNameIgnoreCase(genreDTO.getName());
+        if (optionalGenre.isPresent())
             return false;
-        genreRepository.save(modelMapper.map(genreDTO,Genre.class));
+        genreRepository.save(modelMapper.map(genreDTO, GenreEntity.class));
         return true;
+    }
+
+    @Override
+    public List<GenreDTO> findByMovieId(int movieId) {
+        List<GenreEntity> list = genreRepository.findByMovieId(movieId);
+        return list.stream()
+                .map(entity -> modelMapper.map(entity, GenreDTO.class))
+                .collect(Collectors.toList());
     }
 }

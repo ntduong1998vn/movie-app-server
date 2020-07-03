@@ -84,4 +84,9 @@ public class ReviewService implements IReviewService {
         }
         reviewRepository.deleteAll(reviewEntityList);
     }
+
+    @Override
+    public void deleteByMovieId(int movieId) {
+        reviewRepository.deleteByMoveId(movieId);
+    }
 }

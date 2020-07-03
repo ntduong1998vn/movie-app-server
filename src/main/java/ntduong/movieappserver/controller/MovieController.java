@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.xml.transform.OutputKeys;
 import java.util.List;
 
 @RestController
@@ -33,21 +34,23 @@ public class MovieController {
         System.out.println("Page , Size : " + page + " " + size);
 
         if (page > 0) page = page - 1;
-        // TODO handle Error
         return movieService.findByPage(page, size);
     }
 
     @ApiOperation(value = "Get movie by id")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public MovieDTO getOne(@PathVariable int id) {
-        System.out.println("******************* Movie ID: " + id + " ****************************");
+    public ApiResponse<MovieDTO> getOne(@PathVariable int id) {
+        ApiResponse<MovieDTO> apiResponse = new ApiResponse<>();
         MovieDTO result = movieService.findById(id);
-
         if (result != null) {
-            return result;
-        } else
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie with ID=" + id + " NOT FOUND!");
+            apiResponse.setSuccess(HttpStatus.OK);
+            apiResponse.setResult(result);
+        } else {
+            apiResponse.setSuccess(HttpStatus.NOT_FOUND);
+            apiResponse.setMessage("Không tìm thấy movie với Id: " + id);
+        }
+        return apiResponse;
     }
 
     @ApiOperation("Get list movie by genreId")
@@ -55,8 +58,6 @@ public class MovieController {
     Page<MovieDTO> findByGenreId(@RequestParam(name = "id", required = true) int id,
                                  @RequestParam(name = "currentPage", defaultValue = "0") int page,
                                  @RequestParam(name = "pageSize", defaultValue = "12") int size) {
-
-        System.out.println("*********** Genre ID: " + id + " *************");
         return movieService.findByGenreId(id, page, size);
     }
 
@@ -103,13 +104,18 @@ public class MovieController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable int id) {
+    public ApiResponse<String> delete(@PathVariable int id) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
         try {
             movieService.deleteById(id);
-            return new ResponseEntity(HttpStatus.RESET_CONTENT);
+            apiResponse.setSuccess(HttpStatus.OK);
+            apiResponse.setMessage("Xóa thành công.");
         } catch (Exception e) {
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            apiResponse.setSuccess(HttpStatus.BAD_REQUEST);
+            apiResponse.setMessage(e.getMessage());
         }
+
+        return apiResponse;
     }
 
 }

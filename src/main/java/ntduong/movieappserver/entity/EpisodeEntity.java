@@ -8,12 +8,13 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "episodes")
 @Data
-public class Episode implements Serializable {
+public class EpisodeEntity implements Serializable {
 
     private static final long serialVersionUID = 2297444104600285400L;
 
@@ -22,13 +23,8 @@ public class Episode implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("movie_id")
-    @JsonBackReference
     @JoinColumn(name = "movie_id")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Movie movieEpisode;
-
-    @OneToMany(mappedBy = "episode",fetch = FetchType.LAZY,orphanRemoval = true)
-    @JsonManagedReference
-    Set<Source> sources;
 }

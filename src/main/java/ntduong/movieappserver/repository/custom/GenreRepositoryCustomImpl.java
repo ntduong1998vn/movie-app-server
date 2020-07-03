@@ -1,6 +1,6 @@
 package ntduong.movieappserver.repository.custom;
 
-import ntduong.movieappserver.entity.Genre;
+import ntduong.movieappserver.entity.GenreEntity;
 import ntduong.movieappserver.entity.Movie;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,16 +20,16 @@ public class GenreRepositoryCustomImpl implements GenreRepositoryCustom {
 //        query.setParameter("genreId",genreId);
 //        Genre genre = (Genre) query.getSingleResult();
 
-        Genre genre = entityManager.find(Genre.class, genreId);
+        GenreEntity genreEntity = entityManager.find(GenreEntity.class, genreId);
 
-        if(genre!=null){
-            Set<Movie> lsMovie = genre.getMoviesGenres();
+        if(genreEntity !=null){
+            Set<Movie> lsMovie = genreEntity.getMoviesGenres();
 
             for (Movie movie : lsMovie) {
-                movie.getGenres().remove(genre);
+                movie.getGenres().remove(genreEntity);
             }
-            genre.getMoviesGenres().clear();
-            entityManager.remove(genre);
+            genreEntity.getMoviesGenres().clear();
+            entityManager.remove(genreEntity);
         }
 
 

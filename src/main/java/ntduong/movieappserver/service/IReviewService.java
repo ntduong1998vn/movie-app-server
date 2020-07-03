@@ -19,4 +19,6 @@ public interface IReviewService {
     void deleteOne(int reviewId);
 
     void deleteList(List<Integer> deleteList);
+
+    void deleteByMovieId(int movieId);
 }

@@ -6,7 +6,7 @@ package ntduong.movieappserver.controller;
 
 import io.swagger.annotations.ApiOperation;
 import ntduong.movieappserver.dto.ActorDTO;
-import ntduong.movieappserver.dto.form.ActorForm;
+import ntduong.movieappserver.form.ActorForm;
 import ntduong.movieappserver.dto.ApiResponse;
 import ntduong.movieappserver.exception.ResourceNotFoundException;
 import ntduong.movieappserver.service.IActorService;

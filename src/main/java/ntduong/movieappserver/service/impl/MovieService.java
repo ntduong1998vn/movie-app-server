@@ -1,16 +1,19 @@
 package ntduong.movieappserver.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
+import ntduong.movieappserver.dto.CharacterDTO;
+import ntduong.movieappserver.dto.GenreDTO;
 import ntduong.movieappserver.dto.MovieDTO;
+import ntduong.movieappserver.entity.CharacterEntity;
+import ntduong.movieappserver.entity.GenreEntity;
 import ntduong.movieappserver.exception.ResourceNotFoundException;
-import ntduong.movieappserver.entity.Genre;
 import ntduong.movieappserver.entity.Movie;
 import ntduong.movieappserver.repository.GenreRepository;
 import ntduong.movieappserver.repository.MovieRepository;
-import ntduong.movieappserver.service.IMovieService;
+import ntduong.movieappserver.service.*;
+import ntduong.movieappserver.util.ObjectMapperUtil;
 import ntduong.movieappserver.util.SearchCriteria;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,26 +28,33 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class MovieService implements IMovieService {
-
-    private static final Logger logger = LoggerFactory.getLogger(MovieService.class);
 
     @Autowired
     private MovieRepository movieRepository;
     @Autowired
     private GenreRepository genreRepository;
     @Autowired
+    private IGenreService genreService;
+    @Autowired
+    private ICommentService commentService;
+    @Autowired
+    private ICharacterService characterService;
+    @Autowired
+    private IEpisodeService episodeService;
+    @Autowired
+    private IReviewService reviewService;
+    @Autowired
     private ModelMapper modelMapper;
 
+    // Skip association
     private MovieDTO entityToDto(Movie movie) {
-        return modelMapper.map(movie, MovieDTO.class);
-    }
-
-    // Skip episode property
-    private MovieDTO entityToDto_NoEpisode(Movie movie) {
         modelMapper.typeMap(Movie.class, MovieDTO.class)
-                .addMappings(mapper -> mapper.skip(MovieDTO::setEpisodes));
+                .addMappings(mapper -> mapper.skip(MovieDTO::setEpisodes))
+                .addMappings(mapper -> mapper.skip(MovieDTO::setCharacters))
+                .addMappings(mapper -> mapper.skip(MovieDTO::setGenres));
         return modelMapper.map(movie, MovieDTO.class);
     }
 
@@ -53,7 +63,10 @@ public class MovieService implements IMovieService {
         return movieRepository.findAll(PageRequest.of(page, size)).map(new Function<Movie, MovieDTO>() {
             @Override
             public MovieDTO apply(Movie movie) {
-                return entityToDto_NoEpisode(movie);
+                MovieDTO result = entityToDto(movie);
+                result.setCharacters(characterService.findByMovieId(movie.getId()));
+                result.setGenres(ObjectMapperUtil.mapAll(movie.getGenres(), GenreDTO.class));
+                return result;
             }
         });
     }
@@ -64,16 +77,30 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public boolean deleteById(int id) {
-        return false;
+    public void deleteById(int id) throws Exception {
+        Movie movie = movieRepository.findById(id).orElse(null);
+        if (movie != null) {
+            // Delete all association
+            // CommentEntity , CharacterEntity , EpisodeEntity , ReviewEntity , GenreEntity
+            // TODO : Write function delete favorite
+            commentService.deleteByMovieId(id);
+            characterService.deleteByMovieId(id);
+            episodeService.deleteByMovieId(id);
+            reviewService.deleteByMovieId(id);
+            movie.getGenres().clear();
+            movieRepository.delete(movie);
+        } else throw new ResourceNotFoundException("Movie", "Id", id);
     }
 
     @Override
     public MovieDTO findById(int id) {
-        Movie result = movieRepository.findById(id).orElse(null);
-        if (result != null)
-            return modelMapper.map(result, MovieDTO.class);
-        else
+        Movie movie = movieRepository.findById(id).orElse(null);
+        if (movie != null) {
+            MovieDTO result = this.entityToDto(movie);
+            result.setCharacters(characterService.findByMovieId(movie.getId()));
+            result.setGenres(ObjectMapperUtil.mapAll(movie.getGenres(), GenreDTO.class));
+            return result;
+        } else
             return null;
     }
 
@@ -129,9 +156,9 @@ public class MovieService implements IMovieService {
             }
         } else {
             Movie newMovie = new Movie();
-            Set<Genre> genres = movie.getGenres();
-            for (Genre genre : genres) {
-                Optional<Genre> newGenre = genreRepository.findById(genre.getId());
+            List<GenreDTO> genres = movie.getGenres();
+            for (GenreDTO genre : genres) {
+                Optional<GenreEntity> newGenre = genreRepository.findById(genre.getId());
                 if (newGenre.isPresent()) {
                     newMovie.addGenre(newGenre.get());
                 } else throw new ResourceNotFoundException("GENRE", "ID", genre.getId());

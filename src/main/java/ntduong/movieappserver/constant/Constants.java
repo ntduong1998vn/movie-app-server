@@ -11,4 +11,11 @@ public final class Constants {
     public static final String POSTER = "poster/";
     public static final String JPEG = "image/jpeg";
     public static final String PNG = "image/png";
+
+    public static enum SourceType {
+        YOUTUBE,
+        JWPLAYER,
+        GGDRIVE,
+        LOTUS
+    }
 }
