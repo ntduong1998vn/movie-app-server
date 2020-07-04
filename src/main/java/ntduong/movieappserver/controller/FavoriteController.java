@@ -34,7 +34,7 @@ public class FavoriteController {
             favoriteService.add(favoriteDTO);
             apiResponse.setSuccess(HttpStatus.CREATED);
             apiResponse.setMessage("Thêm thành công.");
-        } catch (BadRequestException e) {
+        } catch (Exception e) {
             apiResponse.setSuccess(HttpStatus.BAD_REQUEST);
             apiResponse.setMessage(e.getMessage());
         }
@@ -56,4 +56,33 @@ public class FavoriteController {
         return apiResponse;
     }
 
+    @ApiOperation("DELETE LIST FAVORITE")
+    @DeleteMapping("/")
+    public ApiResponse<String> deleteList(@RequestBody List<Integer> deleteList) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        try {
+            favoriteService.delete(deleteList);
+            apiResponse.setSuccess(HttpStatus.OK);
+            apiResponse.setMessage("Xóa thành công.");
+        } catch (Exception e) {
+            apiResponse.setSuccess(HttpStatus.BAD_REQUEST);
+            apiResponse.setMessage(e.getMessage());
+        }
+        return apiResponse;
+    }
+
+    @ApiOperation("UPDATE CURRENT TIME BY USERID AND MOVIEID")
+    @PutMapping("/{id}")
+    public ApiResponse<String> updateCurrentTime(@PathVariable int id, @RequestBody FavoriteDTO favoriteDTO) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        try {
+            favoriteService.updateCurrentTime(favoriteDTO);
+            apiResponse.setSuccess(HttpStatus.OK);
+            apiResponse.setMessage("Cập nhật currentTime thành công.");
+        } catch (Exception e) {
+            apiResponse.setSuccess(HttpStatus.BAD_REQUEST);
+            apiResponse.setMessage(e.getMessage());
+        }
+        return apiResponse;
+    }
 }

@@ -6,15 +6,17 @@ import ntduong.movieappserver.exception.BadRequestException;
 import java.util.List;
 
 public interface IFavoriteService {
-    void add(FavoriteDTO favoriteDTO) throws BadRequestException;
+    void add(FavoriteDTO favoriteDTO) ;
 
     List<FavoriteDTO> findAllByUserId(int userId);
 
-    void delete(List<Integer> deleteList);
+    void delete(List<Integer> deleteList) ;
 
-    void delete(int id);
+    void delete(int id) ;
 
-    void deleteByMovieId(int movieId);
+    void deleteByMovieId(int movieId) ;
 
-    void deleteByUserId(int movieId);
+    void deleteByUserId(int movieId) ;
+
+    void updateCurrentTime(FavoriteDTO favoriteDTO);
 }
