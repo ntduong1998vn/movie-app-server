@@ -4,20 +4,19 @@ import lombok.RequiredArgsConstructor;
 import ntduong.movieappserver.constant.StaticValue;
 import ntduong.movieappserver.dto.FavoriteDTO;
 import ntduong.movieappserver.entity.FavoriteEntity;
-import ntduong.movieappserver.entity.Movie;
 import ntduong.movieappserver.exception.BadRequestException;
+import ntduong.movieappserver.exception.ResourceNotFoundException;
 import ntduong.movieappserver.repository.FavoriteRepository;
 import ntduong.movieappserver.repository.MovieRepository;
 import ntduong.movieappserver.service.IFavoriteService;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.persistence.EntityExistsException;
 
 import static ntduong.movieappserver.repository.specification.FavoriteSpecifications.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -65,12 +64,22 @@ public class FavoriteService implements IFavoriteService {
     }
 
     @Override
-    public void delete(List<Integer> deleteList) {
-
+    public void delete(List<Integer> deleteList) throws BadRequestException {
+        List<FavoriteEntity> favoriteEntityList = new ArrayList<>();
+        for (int id : deleteList) {
+            FavoriteEntity favoriteEntity = favoriteRepository.findById(id).orElse(null);
+            if (favoriteEntity != null) favoriteEntityList.add(favoriteEntity);
+            else throw new BadRequestException("FavoriteEntity", "Id", id);
+        }
+        favoriteRepository.deleteAll(favoriteEntityList);
     }
 
     @Override
     public void delete(int id) {
+        FavoriteEntity favoriteEntity = favoriteRepository.findById(id).orElse(null);
+        if (favoriteEntity == null)
+            throw new ResourceNotFoundException("FavoriteEntity", "Id", id);
+        else favoriteRepository.delete(favoriteEntity);
 
     }
 
@@ -82,5 +91,16 @@ public class FavoriteService implements IFavoriteService {
     @Override
     public void deleteByUserId(int movieId) {
 
+    }
+
+    @Override
+    public void updateCurrentTime(FavoriteDTO favoriteDTO) {
+        Optional<FavoriteEntity> optionalFavoriteEntity =
+                favoriteRepository.findById(favoriteDTO.getId());
+        if (optionalFavoriteEntity.isPresent()) {
+            FavoriteEntity favoriteEntity = optionalFavoriteEntity.get();
+            favoriteEntity.setCurrentTime(favoriteDTO.getCurrentTime());
+            favoriteRepository.save(favoriteEntity);
+        } else throw new ResourceNotFoundException("FavoriteEntity", "Id", favoriteDTO.getId());
     }
 }
