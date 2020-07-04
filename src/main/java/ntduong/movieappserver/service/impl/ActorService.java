@@ -12,6 +12,7 @@ import ntduong.movieappserver.exception.ResourceNotFoundException;
 import ntduong.movieappserver.repository.ActorRepository;
 import ntduong.movieappserver.service.IActorService;
 import ntduong.movieappserver.service.ICharacterService;
+import ntduong.movieappserver.util.ImageUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,8 +29,8 @@ import java.util.Optional;
 
 @Service
 public class ActorService implements IActorService {
-//    @Autowired
-//    ImageUtil imageUtil;
+    @Autowired
+    ImageUtil imageUtil;
     @Autowired
     ActorRepository actorRepository;
     @Autowired
@@ -41,7 +42,7 @@ public class ActorService implements IActorService {
     public void add(ActorForm actorForm) throws IOException {
         MultipartFile imgFile = actorForm.getImage();
         if (imgFile != null) {
-//            imageUtil.uploadImage(Constants.AVATAR, imgFile.getOriginalFilename(), imgFile.getContentType(), imgFile.getInputStream());
+            imageUtil.uploadImage(Constants.AVATAR, imgFile.getOriginalFilename(), imgFile.getContentType(), imgFile.getInputStream());
             ActorEntity actorEntity = new ActorEntity();
             actorEntity.setName(actorForm.getName());
             actorEntity.setAvatar(imgFile.getOriginalFilename());
@@ -62,10 +63,10 @@ public class ActorService implements IActorService {
             if (actorForm.getImage() != null) {
                 if (Objects.equals(file.getContentType(), Constants.JPEG) ||
                         Objects.equals(file.getContentType(), Constants.PNG)) {
-//                    if (imageUtil.deleteImage(Constants.AVATAR, actorEntity.getAvatar())) {
-//                        imageUtil.uploadImage(Constants.AVATAR, file.getOriginalFilename(), file.getContentType(), file.getInputStream());
-//                        actorEntity.setAvatar(file.getOriginalFilename());
-//                    }
+                    if (imageUtil.deleteImage(Constants.AVATAR, actorEntity.getAvatar())) {
+                        imageUtil.uploadImage(Constants.AVATAR, file.getOriginalFilename(), file.getContentType(), file.getInputStream());
+                        actorEntity.setAvatar(file.getOriginalFilename());
+                    }
                 }
             }
             // delete association with CharacterEntity
