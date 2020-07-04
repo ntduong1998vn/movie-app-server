@@ -40,7 +40,6 @@ public class FavoriteController {
         }
         return apiResponse;
     }
-
     @ApiOperation("GET FAVORITE LIST BY USERID")
     @GetMapping("/{userId}")
     public ApiResponse<List<FavoriteDTO>> getList(@PathVariable int userId) {

@@ -17,22 +17,21 @@ import java.io.*;
 @Component
 public class ImageUtil {
 
-//    @Autowired
-//    Bucket bucket;
+    @Autowired
+    Bucket bucket;
 
     public void uploadImage(String projectId, String bucketName, String fileName, String contentType, InputStream data) {
-//        bucket.create(bucketName + fileName, data, contentType);
+        bucket.create(bucketName + fileName, data, contentType);
         log.info("File " + fileName + " uploaded to bucket " + bucketName + " as " + fileName);
     }
 
     public void uploadImage(String bucketName, String fileName, String contentType, InputStream data) {
-//        bucket.create(bucketName + fileName, data, contentType);
+        bucket.create(bucketName + fileName, data, contentType);
         log.info("File " + fileName + " uploaded to bucket " + bucketName + " as " + fileName);
     }
 
     public boolean deleteImage(String bucketName,String fileName){
-//        Storage storage = bucket.getStorage();
-//        return storage.delete(bucketName,fileName);
-        return true;
+        Storage storage = bucket.getStorage();
+        return storage.delete(bucketName,fileName);
     }
 }
