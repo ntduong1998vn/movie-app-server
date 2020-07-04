@@ -1,26 +1,24 @@
 package ntduong.movieappserver.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import ntduong.movieappserver.dto.GenreDTO;
 import ntduong.movieappserver.entity.GenreEntity;
 import ntduong.movieappserver.repository.GenreRepository;
 import ntduong.movieappserver.service.IGenreService;
+import ntduong.movieappserver.util.ObjectMapperUtil;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class GenreService implements IGenreService {
 
-    @Autowired
-    ModelMapper modelMapper;
-
-    @Autowired
-    private GenreRepository genreRepository;
-
+    private final ModelMapper modelMapper;
+    private final GenreRepository genreRepository;
 
     @Override
     public boolean delete(int id) {
@@ -50,8 +48,8 @@ public class GenreService implements IGenreService {
     }
 
     @Override
-    public List<GenreEntity> findAll() {
-        return genreRepository.findAll();
+    public List<GenreDTO> findAll() {
+        return ObjectMapperUtil.mapAll(genreRepository.findAll(),GenreDTO.class);
     }
 
     @Override

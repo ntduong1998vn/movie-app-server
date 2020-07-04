@@ -4,7 +4,7 @@
 
 package ntduong.movieappserver.service.impl;
 
-import ntduong.movieappserver.constant.Constants;
+import ntduong.movieappserver.constant.StaticValue;
 import ntduong.movieappserver.dto.ActorDTO;
 import ntduong.movieappserver.form.ActorForm;
 import ntduong.movieappserver.entity.ActorEntity;
@@ -42,7 +42,7 @@ public class ActorService implements IActorService {
     public void add(ActorForm actorForm) throws IOException {
         MultipartFile imgFile = actorForm.getImage();
         if (imgFile != null) {
-            imageUtil.uploadImage(Constants.AVATAR, imgFile.getOriginalFilename(), imgFile.getContentType(), imgFile.getInputStream());
+            imageUtil.uploadImage(StaticValue.AVATAR, imgFile.getOriginalFilename(), imgFile.getContentType(), imgFile.getInputStream());
             ActorEntity actorEntity = new ActorEntity();
             actorEntity.setName(actorForm.getName());
             actorEntity.setAvatar(imgFile.getOriginalFilename());
@@ -61,10 +61,10 @@ public class ActorService implements IActorService {
             // Delete old image and update new image
             MultipartFile file = actorForm.getImage();
             if (actorForm.getImage() != null) {
-                if (Objects.equals(file.getContentType(), Constants.JPEG) ||
-                        Objects.equals(file.getContentType(), Constants.PNG)) {
-                    if (imageUtil.deleteImage(Constants.AVATAR, actorEntity.getAvatar())) {
-                        imageUtil.uploadImage(Constants.AVATAR, file.getOriginalFilename(), file.getContentType(), file.getInputStream());
+                if (Objects.equals(file.getContentType(), StaticValue.JPEG) ||
+                        Objects.equals(file.getContentType(), StaticValue.PNG)) {
+                    if (imageUtil.deleteImage(StaticValue.AVATAR, actorEntity.getAvatar())) {
+                        imageUtil.uploadImage(StaticValue.AVATAR, file.getOriginalFilename(), file.getContentType(), file.getInputStream());
                         actorEntity.setAvatar(file.getOriginalFilename());
                     }
                 }

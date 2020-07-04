@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface IGenreService {
 
     // Get all genre
-    List<GenreEntity> findAll();
+    List<GenreDTO> findAll();
 
     boolean delete(int id);
 
