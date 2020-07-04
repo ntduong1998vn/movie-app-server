@@ -22,7 +22,7 @@ public class FavoriteEntity implements Serializable {
     @Column(name = "users_id", nullable = false)
     private Integer usersId;
 
-    @Column(name = "current_time")
-    private int currentTime;
+    @Column(name = "current_time_play")
+    private Integer currentTime;
 
 }

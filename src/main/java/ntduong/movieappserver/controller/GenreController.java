@@ -21,8 +21,8 @@ public class GenreController {
     private IGenreService service;
 
     @GetMapping("/")
-    public ApiResponse<List<GenreEntity>> getAll() {
-        ApiResponse<List<GenreEntity>> apiResponse = new ApiResponse<>();
+    public ApiResponse<List<GenreDTO>> getAll() {
+        ApiResponse<List<GenreDTO>> apiResponse = new ApiResponse<>();
         apiResponse.setSuccess(HttpStatus.OK);
         apiResponse.setResult(service.findAll());
         return apiResponse;

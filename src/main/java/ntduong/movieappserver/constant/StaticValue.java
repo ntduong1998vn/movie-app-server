@@ -5,12 +5,13 @@
 
 package ntduong.movieappserver.constant;
 
-public final class Constants {
+public final class StaticValue {
     public static final String AVATAR = "avatar/";
     public static final String GALLERY = "gallery/";
     public static final String POSTER = "poster/";
     public static final String JPEG = "image/jpeg";
     public static final String PNG = "image/png";
+    public static final String EMPTY_STRING = "";
 
     public static enum SourceType {
         YOUTUBE,

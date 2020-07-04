@@ -1,6 +1,7 @@
 package ntduong.movieappserver.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import ntduong.movieappserver.constant.StaticValue;
 import ntduong.movieappserver.dto.FavoriteDTO;
 import ntduong.movieappserver.entity.FavoriteEntity;
 import ntduong.movieappserver.entity.Movie;
@@ -54,6 +55,7 @@ public class FavoriteService implements IFavoriteService {
                 favoriteDTO.setMovieId(favoriteEntity.getMoviesId());
                 favoriteDTO.setUserId(favoriteEntity.getMoviesId());
                 favoriteDTO.setCurrentTime(favoriteEntity.getCurrentTime());
+                favoriteDTO.setMovieTitle(StaticValue.EMPTY_STRING);
                 movieRepository.findById(favoriteEntity.getMoviesId())
                         .ifPresent(movie -> favoriteDTO.setMovieTitle(movie.getTitle()));
                 return favoriteDTO;
