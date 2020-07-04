@@ -4,7 +4,6 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalTime;
 
 @Table(name = "favorites")
 @Entity
@@ -24,6 +23,6 @@ public class FavoriteEntity implements Serializable {
     private Integer usersId;
 
     @Column(name = "current_time")
-    private LocalTime currentTime;
+    private int currentTime;
 
 }

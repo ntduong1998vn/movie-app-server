@@ -1,12 +1,13 @@
 package ntduong.movieappserver.service;
 
-import ntduong.movieappserver.entity.FavoriteEntity;
+import ntduong.movieappserver.dto.FavoriteDTO;
 
 import java.util.List;
 
 public interface IFavoriteService {
-    void add(FavoriteEntity favoriteEntity);
+    void add(FavoriteDTO favoriteDTO);
 
+    List<FavoriteDTO> findAllByUserId(int userId);
     void delete(List<Integer> deleteList);
 
     void delete(int id);

@@ -37,6 +37,6 @@ public interface ReviewRepository extends JpaRepository<ReviewEntity, Integer> {
                                            Pageable page);
 
     @Modifying
-    @Query("DELETE FROM ReviewEntity r INNER JOIN r.reviewMovie m WHERE m.id = :movieId")
+    @Query("DELETE FROM ReviewEntity r WHERE r.reviewMovie.id = :movieId")
     void deleteByMoveId(@Param("movieId") int movieId);
 }
