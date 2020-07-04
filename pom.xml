@@ -54,6 +54,13 @@
         </dependency>
 
         <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+            <version>5.3.7.Final</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.google.firebase</groupId>
             <artifactId>firebase-admin</artifactId>
             <version>6.12.2</version>
