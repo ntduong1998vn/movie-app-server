@@ -63,7 +63,7 @@ public class Movie implements Serializable {
     private Integer adult = 0;
 
     @ManyToMany(fetch = FetchType.LAZY,
-            mappedBy = "moviesGenres",
+            mappedBy = "movies",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
@@ -95,12 +95,12 @@ public class Movie implements Serializable {
 
     public void addGenre(GenreEntity genreEntity) {
         this.genres.add(genreEntity);
-        genreEntity.getMoviesGenres().add(this);
+        genreEntity.getMovies().add(this);
     }
 
     public void removeGenre(GenreEntity genreEntity) {
         this.genres.remove(genreEntity);
-        genreEntity.getMoviesGenres().remove(this);
+        genreEntity.getMovies().remove(this);
     }
 
 }

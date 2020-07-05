@@ -16,6 +16,6 @@ public interface GenreRepository extends JpaRepository<GenreEntity, Integer> {
 
     Optional<GenreEntity> findByNameIgnoreCase(String name);
 
-    @Query("SELECT g FROM GenreEntity g INNER JOIN g.moviesGenres m WHERE m = :movieId")
+    @Query("SELECT g FROM GenreEntity g INNER JOIN g.movies m WHERE m = :movieId")
     List<GenreEntity> findByMovieId(@Param("movieId") int movieId);
 }

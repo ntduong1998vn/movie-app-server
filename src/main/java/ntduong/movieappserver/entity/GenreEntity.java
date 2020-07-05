@@ -27,15 +27,15 @@ public class GenreEntity implements Serializable {
             name = "genres_movies",
             joinColumns = @JoinColumn(name = "genre_id"),
             inverseJoinColumns = @JoinColumn(name = "movie_id"))
-    private Set<Movie> moviesGenres ;
+    private Set<Movie> movies ;
 
     public void addMovie(Movie movie){
-        this.moviesGenres.add(movie);
+        this.movies.add(movie);
         movie.getGenres().add(this);
     }
 
     public void removeMovie(Movie movie){
-        this.moviesGenres.remove(movie);
+        this.movies.remove(movie);
         movie.getGenres().remove(this);
     }
 

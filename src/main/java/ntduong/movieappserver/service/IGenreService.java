@@ -9,10 +9,9 @@ import java.util.Optional;
 
 public interface IGenreService {
 
-    // Get all genre
     List<GenreDTO> findAll();
 
-    boolean delete(int id);
+    void delete(int id);
 
     GenreEntity update(GenreDTO updateGenre);
 

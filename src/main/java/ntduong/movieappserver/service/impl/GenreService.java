@@ -3,6 +3,8 @@ package ntduong.movieappserver.service.impl;
 import lombok.RequiredArgsConstructor;
 import ntduong.movieappserver.dto.GenreDTO;
 import ntduong.movieappserver.entity.GenreEntity;
+import ntduong.movieappserver.entity.Movie;
+import ntduong.movieappserver.exception.ResourceNotFoundException;
 import ntduong.movieappserver.repository.GenreRepository;
 import ntduong.movieappserver.service.IGenreService;
 import ntduong.movieappserver.util.ObjectMapperUtil;
@@ -21,21 +23,16 @@ public class GenreService implements IGenreService {
     private final GenreRepository genreRepository;
 
     @Override
-    public boolean delete(int id) {
-        Optional<GenreEntity> result = genreRepository.findById(id);
-        if (result.isPresent()) {
-//            Genre deletedGenre = result.get();
-//            Delete all relationships with the others movie
-//            Set<Movie> movies = deletedGenre.getMoviesGenres();
-//            List<Movie> movies = new ArrayList<>(deletedGenre.getMoviesGenres());
-//            for (Movie movie : movies) {
-//                movie.removeGenre(deletedGenre);
+    public void delete(int id) {
+        GenreEntity genreEntity = genreRepository.findById(id).orElse(null);
+        if (genreEntity != null) {
+//            Set<Movie> movieList = genreEntity.getMovies();
+//            Iterator<Movie> value = movieList.iterator();
+//            while (value.hasNext()) {
+//                genreEntity.removeMovie(value.next());
 //            }
-            // Delete this genre
-            genreRepository.deleteById(id);
-            return true;
-        }
-        return false;
+            genreRepository.delete(genreEntity);
+        } else throw new ResourceNotFoundException("GenreEntity", "Id", id);
     }
 
     @Override
@@ -49,7 +46,7 @@ public class GenreService implements IGenreService {
 
     @Override
     public List<GenreDTO> findAll() {
-        return ObjectMapperUtil.mapAll(genreRepository.findAll(),GenreDTO.class);
+        return ObjectMapperUtil.mapAll(genreRepository.findAll(), GenreDTO.class);
     }
 
     @Override
