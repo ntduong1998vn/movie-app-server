@@ -78,11 +78,17 @@ public class GenreController {
     }
 
     @DeleteMapping("/{genreId}")
-    public ApiResponse delete(@PathVariable int genreId) {
-        boolean result = service.delete(genreId);
-        if (result) return new ApiResponse(HttpStatus.OK, "Xoá thành công!");
-
-        return new ApiResponse(HttpStatus.NOT_FOUND, "Xóa thất bại!");
+    public ApiResponse<String> delete(@PathVariable int genreId) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        try {
+            service.delete(genreId);
+            apiResponse.setSuccess(HttpStatus.OK);
+            apiResponse.setMessage("Cập nhật thành công");
+        } catch (Exception e) {
+            apiResponse.setSuccess(HttpStatus.BAD_REQUEST);
+            apiResponse.setMessage(e.getMessage());
+        }
+        return apiResponse;
     }
 
     @GetMapping("/search")
