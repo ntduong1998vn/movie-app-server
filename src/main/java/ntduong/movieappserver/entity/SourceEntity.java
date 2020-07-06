@@ -19,7 +19,7 @@ public class SourceEntity implements Serializable {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "label")
+    @Column(name = "label",length = 20)
     private String label;
 
     @Column(name = "episode_id", nullable = false)
@@ -28,14 +28,15 @@ public class SourceEntity implements Serializable {
     @Column(name = "movie_id", nullable = false)
     private Integer movieId;
 
-    @NotNull
     @Enumerated
-    @Column(columnDefinition = "smallint")
+    @Column(columnDefinition = "smallint",nullable = false)
     StaticValue.SourceType server;
 
     @Column(name = "src")
     private String src;
 
+    @Column(name = "resolution",length = 6)
+    private String resolution;
     //    @Column(name = "server", nullable = false)
     //    private Integer server;
 }

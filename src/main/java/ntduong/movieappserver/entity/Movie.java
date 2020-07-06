@@ -57,7 +57,7 @@ public class Movie implements Serializable {
     private Integer view = 0;
 
     @Column(name = "visible")
-    private Integer visible = 1;
+    private boolean visible = true;
 
     @Column(name = "adult")
     private Integer adult = 0;

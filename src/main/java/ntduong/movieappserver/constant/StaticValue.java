@@ -19,4 +19,8 @@ public final class StaticValue {
         GGDRIVE,
         LOTUS
     }
+
+    public static enum Resolution {
+
+    }
 }

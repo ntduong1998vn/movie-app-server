@@ -11,4 +11,6 @@ public interface IEpisodeService {
     void delete(List<Integer> episodeList);
 
     void deleteByMovieId(int movieId) throws Exception;
+
+    List<EpisodeDTO> findByMovieId(int movieId);
 }
