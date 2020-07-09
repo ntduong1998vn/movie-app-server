@@ -5,7 +5,7 @@ import ntduong.movieappserver.dto.AuthResponse;
 import ntduong.movieappserver.dto.request.LoginRequest;
 import ntduong.movieappserver.dto.request.SignUpRequest;
 import ntduong.movieappserver.exception.BadRequestException;
-import ntduong.movieappserver.entity.User;
+import ntduong.movieappserver.entity.UserEntity;
 import ntduong.movieappserver.security.CurrentUser;
 import ntduong.movieappserver.security.UserPrincipal;
 import ntduong.movieappserver.service.impl.UserService;
@@ -54,7 +54,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ApiResponse register(@RequestBody SignUpRequest signUpRequest){
-        User user = new User();
+        UserEntity user = new UserEntity();
         user.setName(signUpRequest.getName());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.setEmail(signUpRequest.getEmail());

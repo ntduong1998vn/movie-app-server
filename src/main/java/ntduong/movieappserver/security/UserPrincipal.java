@@ -2,7 +2,7 @@ package ntduong.movieappserver.security;
 
 import lombok.*;
 import ntduong.movieappserver.entity.Role;
-import ntduong.movieappserver.entity.User;
+import ntduong.movieappserver.entity.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,7 +27,7 @@ public class UserPrincipal implements UserDetails {
         this.authorities = authorities;
     }
 
-    public static UserPrincipal create(User user){
+    public static UserPrincipal create(UserEntity user){
         UserPrincipal userPrincipal = new UserPrincipal();
         if (null != user) {
             Collection<GrantedAuthority> authorities = new ArrayList<>();

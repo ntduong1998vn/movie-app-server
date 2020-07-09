@@ -25,5 +25,4 @@ public class ActorEntity implements Serializable {
 
     @OneToMany(mappedBy = "actor", fetch = FetchType.LAZY)
     List<CharacterEntity> characters;
-
 }

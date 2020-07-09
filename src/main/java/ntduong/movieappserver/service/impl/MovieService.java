@@ -91,7 +91,7 @@ public class MovieService implements IMovieService {
             MovieDTO result = this.entityToDto(movie);
             result.setCharacters(characterService.findByMovieId(id));
             result.setGenres(ObjectMapperUtil.mapAll(movie.getGenres(), GenreDTO.class));
-            result.setEpisodes(episodeService.findByMovieId(id));
+//            result.setEpisodes(episodeService.findByMovieId(id));
             return result;
         }
         return null;

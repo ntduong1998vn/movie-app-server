@@ -6,9 +6,11 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class SourceDTO {
-    String id;
-    String src;
-    String label;
-    String type;
+    private int id;
+    private String src;
+    private String label;
+    private String server;
+    private String resolution;
 }

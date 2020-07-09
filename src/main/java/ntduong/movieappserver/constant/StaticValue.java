@@ -20,6 +20,13 @@ public final class StaticValue {
         LOTUS
     }
 
+    public enum AuthProvider {
+        LOCAL,
+        FACEBOOK,
+        GOOGLE,
+        GITHUB
+    }
+
     public static enum Resolution {
 
     }

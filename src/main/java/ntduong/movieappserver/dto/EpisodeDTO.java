@@ -15,10 +15,5 @@ public class EpisodeDTO {
     @JsonProperty("movie_id")
     private int movieId;
 
-    public EpisodeDTO(int episodeId, int movieId) {
-        this.episodeId = episodeId;
-        this.movieId = movieId;
-    }
-
     List<SourceDTO> sources = new ArrayList<>();
 }
