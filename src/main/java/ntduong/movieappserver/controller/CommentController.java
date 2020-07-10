@@ -1,7 +1,7 @@
 package ntduong.movieappserver.controller;
 
 import io.swagger.annotations.ApiOperation;
-import ntduong.movieappserver.dto.ApiResponse;
+import ntduong.movieappserver.payload.ApiResponse;
 import ntduong.movieappserver.dto.CommentDTO;
 import ntduong.movieappserver.service.ICommentService;
 import org.springframework.beans.factory.annotation.Autowired;

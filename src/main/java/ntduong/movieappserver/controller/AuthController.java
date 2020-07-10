@@ -1,11 +1,16 @@
 package ntduong.movieappserver.controller;
 
-import ntduong.movieappserver.dto.ApiResponse;
+import com.google.api.Http;
+import lombok.RequiredArgsConstructor;
+import ntduong.movieappserver.entity.RoleEntity;
+import ntduong.movieappserver.payload.ApiResponse;
 import ntduong.movieappserver.dto.AuthResponse;
-import ntduong.movieappserver.dto.request.LoginRequest;
-import ntduong.movieappserver.dto.request.SignUpRequest;
+import ntduong.movieappserver.payload.request.LoginRequest;
+import ntduong.movieappserver.payload.request.SignUpRequest;
 import ntduong.movieappserver.exception.BadRequestException;
 import ntduong.movieappserver.entity.UserEntity;
+import ntduong.movieappserver.repository.RoleRepository;
+import ntduong.movieappserver.repository.UserRepository;
 import ntduong.movieappserver.security.CurrentUser;
 import ntduong.movieappserver.security.UserPrincipal;
 import ntduong.movieappserver.service.impl.UserService;
@@ -21,28 +26,27 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
+import java.net.URI;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private JwtTokenProvider tokenProvider;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider tokenProvider;
+    private final UserService userService;
 
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequest.getEmail(),
+                        loginRequest.getUsernameOrEmail(),
                         loginRequest.getPassword()
                 )
         );
@@ -53,21 +57,21 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ApiResponse register(@RequestBody SignUpRequest signUpRequest){
-        UserEntity user = new UserEntity();
-        user.setName(signUpRequest.getName());
-        user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-        user.setEmail(signUpRequest.getEmail());
-        user = userService.create(user);
-        if(user !=null)
-            return new ApiResponse(HttpStatus.CREATED,"Tạo thành công");
-        else
-            throw new BadRequestException("Email đã tồn tại!");
+    public ResponseEntity<Object> register(@Valid @RequestBody SignUpRequest signUpRequest) {
+//        URI location = ServletUriComponentsBuilder
+//                .fromCurrentContextPath()
+//                .path("/api/users/{username}")
+//                .buildAndExpand(result.getUsername()).toUri());
+//        if (user != null)
+//            return new ApiResponse(HttpStatus.CREATED, "Tạo thành công");
+//        else
+//            throw new BadRequestException("Email đã tồn tại!");
+        return null;
     }
 
     @GetMapping("/authorities")
     @PreAuthorize("hasRole('USER') or hasRole('USER_VIP') or hasRole('ADMIN')")
-    public Collection<? extends GrantedAuthority> getRoles(@CurrentUser UserPrincipal userPrincipal){
+    public Collection<? extends GrantedAuthority> getRoles(@CurrentUser UserPrincipal userPrincipal) {
         return userPrincipal.getAuthorities();
     }
 

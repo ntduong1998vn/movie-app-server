@@ -1,6 +1,6 @@
 package ntduong.movieappserver.security;
 
-import ntduong.movieappserver.service.MyUserDetailsService;
+import ntduong.movieappserver.security.service.CustomUserDetailsService;
 import ntduong.movieappserver.util.JwtTokenProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,15 +25,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
     @Autowired
-    private MyUserDetailsService userService;
-
-    public JwtTokenAuthenticationFilter(){}
-
-
-    public JwtTokenAuthenticationFilter(JwtTokenProvider jwtTokenProvider, MyUserDetailsService userService) {
-        this.userService=userService;
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
+    private CustomUserDetailsService customUserDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -41,17 +33,15 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
             String jwt = getJwtFromRequest(request);
 
             if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
-                int userId = jwtTokenProvider.getUserIdFromToken(jwt);
+                Integer userId = jwtTokenProvider.getUserIdFromToken(jwt);
 
-                UserDetails userDetails = userService.loadUserById(userId);
-                if(userDetails!=null){
-                    // Nếu người dùng hợp lệ, set thông tin cho Seturity Context
-                    UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                UserDetails userDetails = customUserDetailsService.loadUserById(userId);
+                // Nếu người dùng hợp lệ, set thông tin cho Seturity Context
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception ex) {
             logger.error("Could not set user authentication in security context", ex);

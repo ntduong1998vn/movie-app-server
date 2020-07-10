@@ -8,7 +8,7 @@
  * @Email: ntduong1998vn@gmail.com
  */
 
-package ntduong.movieappserver.form;
+package ntduong.movieappserver.payload.form;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

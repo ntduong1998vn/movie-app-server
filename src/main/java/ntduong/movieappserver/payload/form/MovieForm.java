@@ -1,4 +1,4 @@
-package ntduong.movieappserver.form;
+package ntduong.movieappserver.payload.form;
 
 
 import lombok.Getter;

@@ -2,7 +2,7 @@ package ntduong.movieappserver.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import ntduong.movieappserver.dto.ApiResponse;
+import ntduong.movieappserver.payload.ApiResponse;
 import ntduong.movieappserver.dto.MovieDTO;
 import ntduong.movieappserver.entity.Movie;
 import ntduong.movieappserver.service.IMovieService;
@@ -11,9 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import javax.xml.transform.OutputKeys;
 import java.util.List;
 
 @RestController

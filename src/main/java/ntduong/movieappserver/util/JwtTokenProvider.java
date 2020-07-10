@@ -26,9 +26,10 @@ public class JwtTokenProvider {
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
+
         // Generate jwt token
         return Jwts.builder()
-                .setSubject(Integer.toString(userPrincipal.getUserId()))
+                .setSubject(Integer.toString(userPrincipal.getId()))
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, appProperties.getAuth().getTokenSecret())
@@ -36,7 +37,7 @@ public class JwtTokenProvider {
     }
 
     // Decode token to get UserID
-    public int getUserIdFromToken(String token) {
+    public Integer getUserIdFromToken(String token) {
         Claims claims = Jwts.parser()
                             .setSigningKey(appProperties.getAuth().getTokenSecret())
                             .parseClaimsJws(token)

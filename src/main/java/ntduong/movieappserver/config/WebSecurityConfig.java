@@ -3,10 +3,11 @@ package ntduong.movieappserver.config;
 
 import ntduong.movieappserver.security.JwtTokenAuthenticationFilter;
 import ntduong.movieappserver.security.RestAuthenticationEntryPoint;
-import ntduong.movieappserver.service.MyUserDetailsService;
+import ntduong.movieappserver.security.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -30,7 +31,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private MyUserDetailsService userService;
+    private CustomUserDetailsService customUserDetailsService;
 
     @Bean
     public JwtTokenAuthenticationFilter jwtAuthenticationFilter() {
@@ -50,10 +51,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-
+//        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         authenticationManagerBuilder
-                .userDetailsService(userService)
+                .userDetailsService(customUserDetailsService)
                 .passwordEncoder(passwordEncoder());
 
     }
@@ -63,16 +63,34 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .cors()
                     .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .csrf()
+                    .disable()
+                .exceptionHandling()
+                    .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                     .and()
-                .csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                .sessionManagement().
+                    sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
                 .authorizeRequests()
-                    .antMatchers("/auth/**").permitAll()
-                    .antMatchers("/api/**").permitAll()
-                    .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
-                    .anyRequest().authenticated();
+                    .antMatchers("/",
+                            "/favicon.ico",
+                            "/**/*.png",
+                            "/**/*.gif",
+                            "/**/*.svg",
+                            "/**/*.jpg",
+                            "/**/*.html",
+                            "/**/*.css",
+                            "/**/*.js").permitAll()
+                    .antMatchers("/api/auth/**")
+                        .permitAll()
+                    .antMatchers("/api/user/checkUsernameAvailability", "/api/user/checkEmailAvailability")
+                        .permitAll()
+                    .antMatchers(HttpMethod.GET,"/api/users/**")
+                        .permitAll()
+                    .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**")
+                        .permitAll()
+                    .anyRequest()
+                        .authenticated();
 
         // Thêm một lớp Filter kiểm tra jwt
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

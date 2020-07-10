@@ -1,6 +1,6 @@
 package ntduong.movieappserver.controller;
 
-import ntduong.movieappserver.dto.ApiResponse;
+import ntduong.movieappserver.payload.ApiResponse;
 import ntduong.movieappserver.dto.GenreDTO;
 import ntduong.movieappserver.entity.GenreEntity;
 import ntduong.movieappserver.service.IGenreService;

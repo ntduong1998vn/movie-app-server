@@ -6,7 +6,7 @@ package ntduong.movieappserver.service.impl;
 
 import ntduong.movieappserver.constant.StaticValue;
 import ntduong.movieappserver.dto.ActorDTO;
-import ntduong.movieappserver.form.ActorForm;
+import ntduong.movieappserver.payload.form.ActorForm;
 import ntduong.movieappserver.entity.ActorEntity;
 import ntduong.movieappserver.exception.ResourceNotFoundException;
 import ntduong.movieappserver.repository.ActorRepository;

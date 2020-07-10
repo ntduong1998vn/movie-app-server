@@ -1,50 +1,58 @@
 package ntduong.movieappserver.security;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import ntduong.movieappserver.entity.Role;
+import ntduong.movieappserver.entity.RoleEntity;
 import ntduong.movieappserver.entity.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class UserPrincipal implements UserDetails {
 
-    private int userId;
+    private Integer id;
+    @JsonIgnore
     private String email;
+    private String name;
+    private String username;
+    @JsonIgnore
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
+    private boolean isEnable;
 
-    public UserPrincipal(int userId, String email, String password, Collection<? extends GrantedAuthority> authorities) {
-        this.userId = userId;
+    public UserPrincipal(Integer id, String email, String name, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+        this.id = id;
         this.email = email;
+        this.name = name;
+        this.username = username;
         this.password = password;
         this.authorities = authorities;
+        this.isEnable = true;
     }
 
-    public static UserPrincipal create(UserEntity user){
-        UserPrincipal userPrincipal = new UserPrincipal();
-        if (null != user) {
-            Collection<GrantedAuthority> authorities = new ArrayList<>();
-
-            if ( user.getRoles() !=null) {
-                String[] userRoles = user.getRoles().stream().map(Role::getName).toArray(String[]::new);
-                authorities = AuthorityUtils.createAuthorityList(userRoles);
-            }else{
-                authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
-            }
-
-            userPrincipal.setUserId(user.getId());
-            userPrincipal.setEmail(user.getEmail());
-            userPrincipal.setPassword(user.getPassword());
-            userPrincipal.setAuthorities(authorities);
-        }
-        return userPrincipal;
+    public static UserPrincipal create(UserEntity user) {
+        List<GrantedAuthority> authorities = user.getRoles()
+                .stream()
+                .map(roleEntity -> new SimpleGrantedAuthority(roleEntity.getName().name()))
+                .collect(Collectors.toList());
+//                authorities = AuthorityUtils.createAuthorityList(userRoles);
+//                authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+        return new UserPrincipal(
+                user.getId(),
+                user.getEmail(),
+                user.getName(),
+                user.getUsername(),
+                user.getPassword(),
+                authorities
+        );
     }
 
 
@@ -81,6 +89,6 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isEnable;
     }
 }

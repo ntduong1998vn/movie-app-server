@@ -6,8 +6,8 @@ package ntduong.movieappserver.controller;
 
 import io.swagger.annotations.ApiOperation;
 import ntduong.movieappserver.dto.ActorDTO;
-import ntduong.movieappserver.form.ActorForm;
-import ntduong.movieappserver.dto.ApiResponse;
+import ntduong.movieappserver.payload.form.ActorForm;
+import ntduong.movieappserver.payload.ApiResponse;
 import ntduong.movieappserver.exception.ResourceNotFoundException;
 import ntduong.movieappserver.service.IActorService;
 import org.springframework.beans.factory.annotation.Autowired;
