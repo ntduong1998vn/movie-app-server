@@ -19,4 +19,15 @@ public final class StaticValue {
         GGDRIVE,
         LOTUS
     }
+
+    public enum AuthProvider {
+        LOCAL,
+        FACEBOOK,
+        GOOGLE,
+        GITHUB
+    }
+
+    public static enum Resolution {
+
+    }
 }

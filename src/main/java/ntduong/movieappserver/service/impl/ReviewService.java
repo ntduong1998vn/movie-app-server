@@ -1,10 +1,9 @@
 package ntduong.movieappserver.service.impl;
 
 import ntduong.movieappserver.dto.ReviewDTO;
-import ntduong.movieappserver.entity.Comment;
 import ntduong.movieappserver.entity.Movie;
 import ntduong.movieappserver.entity.ReviewEntity;
-import ntduong.movieappserver.entity.User;
+import ntduong.movieappserver.entity.UserEntity;
 import ntduong.movieappserver.exception.ResourceNotFoundException;
 import ntduong.movieappserver.repository.MovieRepository;
 import ntduong.movieappserver.repository.ReviewRepository;
@@ -52,7 +51,7 @@ public class ReviewService implements IReviewService {
 
     @Override
     public void addReview(ReviewDTO reviewDTO) throws ValidationException {
-        Optional<User> optionalUser = userRepository.findById(reviewDTO.getUserId());
+        Optional<UserEntity> optionalUser = userRepository.findById(reviewDTO.getUserId());
         Optional<Movie> optionalMovie = movieRepository.findById(reviewDTO.getMovieId());
         if (optionalUser.isPresent() && optionalMovie.isPresent()) {
             ReviewEntity reviewEntity = new ReviewEntity();

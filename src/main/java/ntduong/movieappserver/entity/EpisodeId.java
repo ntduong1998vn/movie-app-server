@@ -7,9 +7,10 @@ import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 @Embeddable
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
+@Getter
 public class EpisodeId implements Serializable {
 
     @Column(name ="episode_id")

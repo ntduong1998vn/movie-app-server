@@ -24,31 +24,39 @@ public class MovieController {
     @Autowired
     private IMovieService movieService;
 
-    @ApiOperation(value = "Get list movie by page")
+    @ApiOperation(value = "GET LIST BY PAGE")
     @GetMapping("/")
-    @ResponseStatus(HttpStatus.OK)
-    Page<MovieDTO> getListByPage(@RequestParam(name = "currentPage", defaultValue = "0") int page,
-                                 @RequestParam(name = "pageSize", defaultValue = "6") int size) {
-
-        System.out.println("****************************************************");
-        System.out.println("Page , Size : " + page + " " + size);
-
-        if (page > 0) page = page - 1;
-        return movieService.findByPage(page, size);
+    public ApiResponse<Page<MovieDTO>> getListByPage(@RequestParam(name = "currentPage", defaultValue = "1") int page,
+                                                     @RequestParam(name = "pageSize", defaultValue = "6") int size) {
+        ApiResponse<Page<MovieDTO>> apiResponse = new ApiResponse<>();
+        if (page >= 1 & size >= 1) {
+            page--;
+            Page<MovieDTO> dtoPage = movieService.findByPage(page, size);
+            apiResponse.setSuccess(HttpStatus.OK);
+            apiResponse.setResult(dtoPage);
+        } else {
+            apiResponse.setSuccess(HttpStatus.BAD_REQUEST);
+            apiResponse.setMessage("Giá trị của pageSize và currentPage phải lớn hơn 1");
+        }
+        return apiResponse;
     }
 
-    @ApiOperation(value = "Get movie by id")
+    @ApiOperation(value = "GET MOVIE BY ID")
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public ApiResponse<MovieDTO> getOne(@PathVariable int id) {
         ApiResponse<MovieDTO> apiResponse = new ApiResponse<>();
-        MovieDTO result = movieService.findById(id);
-        if (result != null) {
-            apiResponse.setSuccess(HttpStatus.OK);
-            apiResponse.setResult(result);
+        if (id > 0) {
+            MovieDTO result = movieService.findById(id);
+            if (result != null) {
+                apiResponse.setSuccess(HttpStatus.OK);
+                apiResponse.setResult(result);
+            } else {
+                apiResponse.setSuccess(HttpStatus.NOT_FOUND);
+                    apiResponse.setMessage("Không tìm thấy movie với Id: " + id);
+            }
         } else {
-            apiResponse.setSuccess(HttpStatus.NOT_FOUND);
-            apiResponse.setMessage("Không tìm thấy movie với Id: " + id);
+            apiResponse.setSuccess(HttpStatus.BAD_REQUEST);
+            apiResponse.setMessage("MovieId phải lớn hơn 0");
         }
         return apiResponse;
     }
@@ -96,7 +104,6 @@ public class MovieController {
     @PutMapping("/{movieId}")
     public ResponseEntity update(@PathVariable int movieId, @RequestBody MovieDTO movie) {
         boolean result = movieService.update(movieId, movie);
-
         if (result)
             return ResponseEntity.ok(new ApiResponse(HttpStatus.OK, "Update movie successfully!"));
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

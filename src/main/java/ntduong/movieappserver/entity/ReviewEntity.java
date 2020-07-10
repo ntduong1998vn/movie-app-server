@@ -33,5 +33,5 @@ public class ReviewEntity implements Serializable {
     @JoinColumn(name = "user_id",nullable = false)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private User reviewUser;
+    private UserEntity reviewUser;
 }

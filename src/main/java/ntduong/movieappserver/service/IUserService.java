@@ -1,9 +1,9 @@
 package ntduong.movieappserver.service;
 
-import ntduong.movieappserver.entity.User;
+import ntduong.movieappserver.entity.UserEntity;
 
 public interface IUserService {
 
-    public User create(User user);
+    public UserEntity create(UserEntity user);
 
 }

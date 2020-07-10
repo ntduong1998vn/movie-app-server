@@ -32,7 +32,7 @@ public class Comment implements Serializable{
     @JoinColumn(name = "user_id",nullable = false)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private User userComment;
+    private UserEntity userComment;
 
 
 }

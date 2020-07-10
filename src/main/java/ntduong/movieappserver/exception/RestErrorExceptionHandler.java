@@ -1,71 +1,63 @@
 package ntduong.movieappserver.exception;
 
-import lombok.extern.slf4j.Slf4j;
 import ntduong.movieappserver.dto.ApiResponse;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class RestErrorExceptionHandler extends ResponseEntityExceptionHandler {
 
-    public RestErrorExceptionHandler() {
-        super();
-    }
-
-    @ExceptionHandler(BadRequestException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public ApiResponse<String> handleBadRequest(Exception e) {
-        ApiResponse<String> apiResponse = new ApiResponse<>();
-        apiResponse.setSuccess(HttpStatus.BAD_REQUEST);
-        apiResponse.setMessage(e.getMessage());
-        return apiResponse;
-    }
 
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        log.info("Bad Request: {}", ex.getMessage());
-        log.debug("Bad Request: ", ex);
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(final MethodArgumentNotValidException ex, final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
+        logger.info(ex.getClass().getName());
 
-        final BindingResult result = ex.getBindingResult();
-        final List<FieldError> fieldErrors = result.getFieldErrors();
-        final ValidationErrorDTO dto = processFieldErrors(fieldErrors);
-
-        return handleExceptionInternal(ex, dto, headers, HttpStatus.BAD_REQUEST, request);
+        final List<String> errors = new ArrayList<>();
+        for (final FieldError error : ex.getBindingResult().getFieldErrors()) {
+            errors.add(error.getField() + ": " + error.getDefaultMessage());
+        }
+        for (final ObjectError error : ex.getBindingResult().getGlobalErrors()) {
+            errors.add(error.getObjectName() + ": " + error.getDefaultMessage());
+        }
+        final ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), errors);
+        return handleExceptionInternal(ex, apiError, headers, apiError.getStatus(), request);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     protected ResponseEntity<Object> handleNoHandlerFoundException(RuntimeException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        log.warn("Not Found: {}", ex.getMessage());
-        ApiResponse<String> apiResponse = new ApiResponse<>(HttpStatus.NOT_FOUND, ex.getMessage());
-        return handleExceptionInternal(ex, apiResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND);
+        apiError.setMessage(ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<String>> handleException(Exception exp) {
-        ApiResponse<String> err = new ApiResponse<>();
-        err.setSuccess(HttpStatus.BAD_REQUEST);
-        err.setMessage(exp.getMessage());
-        return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex, final WebRequest request) {
+        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND);
+        apiError.setMessage(ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
-    private ValidationErrorDTO processFieldErrors(final List<FieldError> fieldErrors) {
-        final ValidationErrorDTO dto = new ValidationErrorDTO();
-
-        for (final FieldError fieldError : fieldErrors) {
-            final String localizedErrorMessage = fieldError.getDefaultMessage();
-            dto.addFieldError(fieldError.getField(), localizedErrorMessage);
-        }
-        return dto;
+    @ExceptionHandler({BadRequestException.class,
+            EntityAlreadyExistException.class})
+    protected ResponseEntity<Object> handleException(Exception exp) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+        ;
+        apiError.setMessage(exp.getMessage());
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
+
 }

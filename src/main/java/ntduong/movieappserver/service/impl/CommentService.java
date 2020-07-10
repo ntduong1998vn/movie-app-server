@@ -2,10 +2,10 @@ package ntduong.movieappserver.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import ntduong.movieappserver.dto.CommentDTO;
+import ntduong.movieappserver.entity.UserEntity;
 import ntduong.movieappserver.exception.ResourceNotFoundException;
 import ntduong.movieappserver.entity.Comment;
 import ntduong.movieappserver.entity.Movie;
-import ntduong.movieappserver.entity.User;
 import ntduong.movieappserver.repository.CommentRepository;
 import ntduong.movieappserver.repository.MovieRepository;
 import ntduong.movieappserver.repository.UserRepository;
@@ -56,7 +56,7 @@ public class CommentService implements ICommentService {
 
     @Override
     public void addComment(CommentDTO commentDTO) throws ValidationException {
-        Optional<User> optionalUser = userRepository.findById(commentDTO.getUserId());
+        Optional<UserEntity> optionalUser = userRepository.findById(commentDTO.getUserId());
         Optional<Movie> optionalMovie = movieRepository.findById(commentDTO.getMovieId());
         if (optionalUser.isPresent() && optionalMovie.isPresent()) {
             Comment newComment = new Comment();

@@ -14,8 +14,6 @@ public interface IMovieService {
 
     MovieDTO findById(int id);
 
-    Movie create(Movie movie);
-
     boolean update(int movieId, MovieDTO movieDTO);
 
     Page<MovieDTO> findByGenreId(int id, int page, int limit);

@@ -6,12 +6,14 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
-@AllArgsConstructor
+@Setter
+@Getter
+@NoArgsConstructor
 public class EpisodeDTO {
     @JsonProperty("episode_id")
-    int episodeId;
+    private int episodeId;
     @JsonProperty("movie_id")
-    int movieId;
+    private int movieId;
+
     List<SourceDTO> sources = new ArrayList<>();
 }

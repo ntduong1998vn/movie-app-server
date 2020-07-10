@@ -31,5 +31,5 @@ public class Role implements Serializable {
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<User> users;
+    private Set<UserEntity> users;
 }

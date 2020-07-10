@@ -1,5 +1,6 @@
 package ntduong.movieappserver.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ntduong.movieappserver.dto.CharacterDTO;
 import ntduong.movieappserver.dto.GenreDTO;
@@ -22,7 +23,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,24 +30,17 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class MovieService implements IMovieService {
 
-    @Autowired
-    private MovieRepository movieRepository;
-    @Autowired
-    private GenreRepository genreRepository;
-    @Autowired
-    private IGenreService genreService;
-    @Autowired
-    private ICommentService commentService;
-    @Autowired
-    private ICharacterService characterService;
-    @Autowired
-    private IEpisodeService episodeService;
-    @Autowired
-    private IReviewService reviewService;
-    @Autowired
-    private ModelMapper modelMapper;
+    private final MovieRepository movieRepository;
+    private final GenreRepository genreRepository;
+    private final IGenreService genreService;
+    private final ICommentService commentService;
+    private final ICharacterService characterService;
+    private final IEpisodeService episodeService;
+    private final IReviewService reviewService;
+    private final ModelMapper modelMapper;
 
     // Skip association
     private MovieDTO entityToDto(Movie movie) {
@@ -64,7 +57,6 @@ public class MovieService implements IMovieService {
             @Override
             public MovieDTO apply(Movie movie) {
                 MovieDTO result = entityToDto(movie);
-                result.setCharacters(characterService.findByMovieId(movie.getId()));
                 result.setGenres(ObjectMapperUtil.mapAll(movie.getGenres(), GenreDTO.class));
                 return result;
             }
@@ -97,16 +89,12 @@ public class MovieService implements IMovieService {
         Movie movie = movieRepository.findById(id).orElse(null);
         if (movie != null) {
             MovieDTO result = this.entityToDto(movie);
-            result.setCharacters(characterService.findByMovieId(movie.getId()));
+            result.setCharacters(characterService.findByMovieId(id));
             result.setGenres(ObjectMapperUtil.mapAll(movie.getGenres(), GenreDTO.class));
+//            result.setEpisodes(episodeService.findByMovieId(id));
             return result;
-        } else
-            return null;
-    }
-
-    @Override
-    public Movie create(Movie movie) {
-        return movieRepository.create(movie);
+        }
+        return null;
     }
 
     @Override
@@ -120,7 +108,9 @@ public class MovieService implements IMovieService {
         return result.map(new Function<Movie, MovieDTO>() {
             @Override
             public MovieDTO apply(Movie movie) {
-                return entityToDto(movie);
+                MovieDTO result = entityToDto(movie);
+                result.setGenres(ObjectMapperUtil.mapAll(movie.getGenres(), GenreDTO.class));
+                return result;
             }
         });
 
@@ -142,7 +132,6 @@ public class MovieService implements IMovieService {
                         .collect(Collectors.toList()))
                 .orElse(null);
     }
-
 
     @Override
     public void save(MovieDTO movie, boolean isUpdate) {
