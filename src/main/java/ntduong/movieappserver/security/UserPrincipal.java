@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.util.*;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserPrincipal implements UserDetails {
+public class UserPrincipal implements UserDetails, OAuth2User {
 
     private Integer id;
     @JsonIgnore
@@ -27,6 +28,7 @@ public class UserPrincipal implements UserDetails {
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
     private boolean isEnable;
+    private Map<String, Object> attributes;
 
     public UserPrincipal(Integer id, String email, String name, String username, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
@@ -55,6 +57,11 @@ public class UserPrincipal implements UserDetails {
         );
     }
 
+    public static UserPrincipal create(UserEntity user, Map<String, Object> attributes) {
+        UserPrincipal userPrincipal = UserPrincipal.create(user);
+        userPrincipal.setAttributes(attributes);
+        return userPrincipal;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

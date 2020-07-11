@@ -17,7 +17,6 @@ import java.util.TimeZone;
 @SpringBootApplication
 @RequiredArgsConstructor
 @EnableConfigurationProperties(AppProperties.class)
-@EnableJpaAuditing
 @EntityScan(basePackageClasses = {
         MovieAppServerApplication.class,
         Jsr310JpaConverters.class

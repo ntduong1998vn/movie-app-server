@@ -3,10 +3,12 @@ package ntduong.movieappserver.service.impl;
 import lombok.RequiredArgsConstructor;
 import ntduong.movieappserver.constant.RoleNameEnum;
 import ntduong.movieappserver.constant.StaticValue.AuthProvider;
+import ntduong.movieappserver.dto.UserDTO;
 import ntduong.movieappserver.entity.RoleEntity;
 import ntduong.movieappserver.entity.UserEntity;
 import ntduong.movieappserver.exception.BadRequestException;
 import ntduong.movieappserver.exception.EntityNotFoundException;
+import ntduong.movieappserver.mapper.UserMapper;
 import ntduong.movieappserver.payload.request.SignUpRequest;
 import ntduong.movieappserver.repository.RoleRepository;
 import ntduong.movieappserver.repository.UserRepository;
@@ -23,9 +25,10 @@ public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
     @Override
-    public UserEntity create(SignUpRequest signUpRequest) {
+    public UserDTO create(SignUpRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername()))
             throw new BadRequestException("Username is already taken!");
 
@@ -44,6 +47,6 @@ public class UserService implements IUserService {
                 .orElseThrow(() -> new EntityNotFoundException("Role", "Name", "ROLE_USER"));
         user.setRoles(Collections.singleton(userRole));
 
-        return userRepository.save(user);
+        return userMapper.toDto(userRepository.save(user));
     }
 }

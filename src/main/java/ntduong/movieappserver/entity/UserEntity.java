@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import ntduong.movieappserver.constant.StaticValue.AuthProvider;
+import ntduong.movieappserver.entity.audit.DateAudit;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -18,7 +19,7 @@ import java.util.Set;
         })
 })
 @Data
-public class UserEntity extends BaseEntity {
+public class UserEntity extends DateAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -62,9 +63,10 @@ public class Movie implements Serializable {
     @Column(name = "adult")
     private Integer adult = 0;
 
-    @ManyToMany(fetch = FetchType.LAZY,
+    @ManyToMany(fetch = FetchType.EAGER,
             mappedBy = "movies",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @BatchSize(size = 6)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     Set<GenreEntity> genres;
