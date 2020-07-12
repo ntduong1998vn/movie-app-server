@@ -54,7 +54,8 @@ public class AuthController {
         UserDTO result = userService.create(signUpRequest);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/api/users/{username}")
+//                .path("/api/user/{username}")
+                .path("/api/user/me")
                 .buildAndExpand(result.getUsername()).toUri();
         return ResponseEntity.created(location).body(new ApiResponse(HttpStatus.CREATED, "Tạo thành công"));
     }
