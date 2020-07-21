@@ -66,5 +66,4 @@ public class AuthController {
         return userPrincipal.getAuthorities();
     }
 
-
 }

@@ -38,16 +38,16 @@ spring:
       client:
         registration:
           google:
-            clientId: 143204726096-earshdksjp3oiuupcgonjjdrc39rb8at.apps.googleusercontent.com
-            clientSecret: R7MiIHcdRc8n2LnfV-MYL7Rv
+            client-id: 143204726096-earshdksjp3oiuupcgonjjdrc39rb8at.apps.googleusercontent.com
+            client-secret: R7MiIHcdRc8n2LnfV-MYL7Rv
             redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
             scope:
               - email
               - profile
               - openid
           facebook:
-            clientId: 513099212588576
-            clientSecret: 97858327cc7866de0bf2c0ee7d6e1962
+            client-id: 513099212588576
+            client-secret: 97858327cc7866de0bf2c0ee7d6e1962
             redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
             scope:
               - email

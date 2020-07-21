@@ -67,7 +67,7 @@ public class ActorController {
     }
 
     @ApiOperation("UPDATE A ACTOR BY ID")
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<String> update(@PathVariable("id") int id,
                                       @ModelAttribute ActorForm actorForm) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
