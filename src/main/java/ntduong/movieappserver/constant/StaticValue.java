@@ -13,7 +13,7 @@ public final class StaticValue {
     public static final String PNG = "image/png";
     public static final String EMPTY_STRING = "";
 
-    public static enum SourceType {
+    public enum SourceType {
         YOUTUBE,
         JWPLAYER,
         GGDRIVE,
@@ -27,7 +27,7 @@ public final class StaticValue {
         GITHUB
     }
 
-    public static enum Resolution {
+    public enum Resolution {
 
     }
 }

@@ -1,6 +1,5 @@
 package ntduong.movieappserver.exception;
 
-import ntduong.movieappserver.dto.ApiResponse;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;

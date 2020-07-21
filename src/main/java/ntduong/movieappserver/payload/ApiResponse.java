@@ -1,4 +1,4 @@
-package ntduong.movieappserver.dto;
+package ntduong.movieappserver.payload;
 
 import lombok.*;
 import org.springframework.http.HttpStatus;

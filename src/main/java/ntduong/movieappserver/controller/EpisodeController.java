@@ -7,7 +7,7 @@ package ntduong.movieappserver.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import ntduong.movieappserver.dto.ApiResponse;
+import ntduong.movieappserver.payload.ApiResponse;
 import ntduong.movieappserver.dto.EpisodeDTO;
 import ntduong.movieappserver.exception.ResourceNotFoundException;
 import ntduong.movieappserver.service.IEpisodeService;

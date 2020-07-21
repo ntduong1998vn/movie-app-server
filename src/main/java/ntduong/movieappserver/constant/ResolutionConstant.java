@@ -7,6 +7,6 @@ package ntduong.movieappserver.constant;
 
 public class ResolutionConstant {
     public static String SD = "360P";
-    public static String HD = "720";
+    public static String HD = "720P";
     public static String FullHD = "1080P";
 }

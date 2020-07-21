@@ -31,6 +31,6 @@ public class ImageUtil {
 
     public boolean deleteImage(String bucketName,String fileName){
         Storage storage = bucket.getStorage();
-        return storage.delete(bucketName,fileName);
+        return storage.delete(bucket.getName(),bucketName+fileName);
     }
 }

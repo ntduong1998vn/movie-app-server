@@ -6,8 +6,8 @@ package ntduong.movieappserver.controller;
 
 import io.swagger.annotations.ApiOperation;
 import ntduong.movieappserver.dto.ActorDTO;
-import ntduong.movieappserver.form.ActorForm;
-import ntduong.movieappserver.dto.ApiResponse;
+import ntduong.movieappserver.payload.form.ActorForm;
+import ntduong.movieappserver.payload.ApiResponse;
 import ntduong.movieappserver.exception.ResourceNotFoundException;
 import ntduong.movieappserver.service.IActorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +67,7 @@ public class ActorController {
     }
 
     @ApiOperation("UPDATE A ACTOR BY ID")
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<String> update(@PathVariable("id") int id,
                                       @ModelAttribute ActorForm actorForm) {
         ApiResponse<String> apiResponse = new ApiResponse<>();

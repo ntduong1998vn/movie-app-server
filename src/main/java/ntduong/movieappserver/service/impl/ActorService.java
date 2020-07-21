@@ -6,7 +6,7 @@ package ntduong.movieappserver.service.impl;
 
 import ntduong.movieappserver.constant.StaticValue;
 import ntduong.movieappserver.dto.ActorDTO;
-import ntduong.movieappserver.form.ActorForm;
+import ntduong.movieappserver.payload.form.ActorForm;
 import ntduong.movieappserver.entity.ActorEntity;
 import ntduong.movieappserver.exception.ResourceNotFoundException;
 import ntduong.movieappserver.repository.ActorRepository;
@@ -41,14 +41,13 @@ public class ActorService implements IActorService {
     @Override
     public void add(ActorForm actorForm) throws IOException {
         MultipartFile imgFile = actorForm.getImage();
-        if (imgFile != null) {
+        ActorEntity actorEntity = new ActorEntity();
+        if (imgFile != null)
             imageUtil.uploadImage(StaticValue.AVATAR, imgFile.getOriginalFilename(), imgFile.getContentType(), imgFile.getInputStream());
-            ActorEntity actorEntity = new ActorEntity();
-            actorEntity.setName(actorForm.getName());
-            actorEntity.setAvatar(imgFile.getOriginalFilename());
-            actorEntity.setNation(actorForm.getNation());
-            actorRepository.save(actorEntity);
-        }
+        actorEntity.setName(actorForm.getName());
+        actorEntity.setAvatar(imgFile.getOriginalFilename());
+        actorEntity.setNation(actorForm.getNation());
+        actorRepository.save(actorEntity);
     }
 
     /*
@@ -60,7 +59,7 @@ public class ActorService implements IActorService {
         if (actorEntity != null) {
             // Delete old image and update new image
             MultipartFile file = actorForm.getImage();
-            if (actorForm.getImage() != null) {
+            if (file != null) {
                 if (Objects.equals(file.getContentType(), StaticValue.JPEG) ||
                         Objects.equals(file.getContentType(), StaticValue.PNG)) {
                     if (imageUtil.deleteImage(StaticValue.AVATAR, actorEntity.getAvatar())) {
@@ -70,9 +69,9 @@ public class ActorService implements IActorService {
                 }
             }
             // delete association with CharacterEntity
-            if (!actorForm.getDeleteCharacterList().isEmpty()) {
-                characterService.deleteAll(actorForm.getDeleteCharacterList());
-            }
+//            if (!actorForm.getDeleteCharacterList().isEmpty()) {
+//                characterService.deleteAll(actorForm.getDeleteCharacterList());
+//            }
             actorEntity.setName(actorForm.getName());
             actorEntity.setNation(actorForm.getNation());
             actorRepository.save(actorEntity);
@@ -81,9 +80,9 @@ public class ActorService implements IActorService {
 
     @Transactional
     @Override
-    public void deleteOne(int actorId) throws ResourceNotFoundException{
+    public void deleteOne(int actorId) throws ResourceNotFoundException {
         ActorEntity actorEntity = actorRepository.findById(actorId).orElse(null);
-        if (actorEntity !=null) {
+        if (actorEntity != null) {
             characterService.deleteByActorId(actorId);
             actorRepository.delete(actorEntity);
         } else throw new ResourceNotFoundException("ActorEntity", "Id", actorId);

@@ -1,15 +1,17 @@
 package ntduong.movieappserver.repository;
 
-import ntduong.movieappserver.entity.Role;
+import ntduong.movieappserver.constant.RoleNameEnum;
+import ntduong.movieappserver.entity.RoleEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface RoleRepository extends CrudRepository<Role, Integer> {
+public interface RoleRepository extends CrudRepository<RoleEntity, Integer> {
 
-    Role findByName(String role);
+    Optional<RoleEntity> findByName(RoleNameEnum role);
 
-    List<Role> findByNameIn(List<String> roles);
+    List<RoleEntity> findByNameIn(List<String> roles);
 }

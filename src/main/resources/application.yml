@@ -2,9 +2,13 @@ server:
   port: 9000
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/movie-db?useSSL=false
+    url: jdbc:mysql://localhost:3306/movie-db?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
     username: root
     password: 123456
+  jackson:
+    time-zone: Asia/Ho_Chi_Minh
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
   mail:
     host: smtp.gmail.com
     port: 587
@@ -22,7 +26,7 @@ spring:
       max-file-size: 10MB
       max-request-size: 12MB
   jpa:
-#    show-sql: true
+    #    show-sql: true
     hibernate:
       ddl-auto: update
       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
@@ -34,23 +38,24 @@ spring:
       client:
         registration:
           google:
-            clientId: 858667922847-s05fcdggmh0k486pbdkp1tdllkh259so.apps.googleusercontent.com
-            clientSecret: w3KU6N2hY-DLQoOx6ks8_6wA
-            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
+            client-id: 143204726096-earshdksjp3oiuupcgonjjdrc39rb8at.apps.googleusercontent.com
+            client-secret: R7MiIHcdRc8n2LnfV-MYL7Rv
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
             scope:
               - email
               - profile
+              - openid
           facebook:
-            clientId: 513099212588576
-            clientSecret: 97858327cc7866de0bf2c0ee7d6e1962
-            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
+            client-id: 513099212588576
+            client-secret: 97858327cc7866de0bf2c0ee7d6e1962
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
             scope:
               - email
               - public_profile
           github:
             clientId: fe3f2d2f2ed7402df66e
             clientSecret: e57ca55b5d3259ffbf4587acec28d26a33e32c71
-            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
             scope:
               - user:email
               - read:user

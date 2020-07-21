@@ -1,9 +1,11 @@
 package ntduong.movieappserver.service;
 
+import ntduong.movieappserver.dto.UserDTO;
 import ntduong.movieappserver.entity.UserEntity;
+import ntduong.movieappserver.payload.request.SignUpRequest;
 
 public interface IUserService {
 
-    public UserEntity create(UserEntity user);
+    UserDTO create(SignUpRequest signUpRequest);
 
 }

@@ -1,4 +1,9 @@
-package ntduong.movieappserver.service;
+/*
+ * @Author by Nguyen Trieu Duong
+ * @Email: ntduong1998vn@gmail.com
+ */
+
+package ntduong.movieappserver.security.service;
 
 import ntduong.movieappserver.exception.ResourceNotFoundException;
 import ntduong.movieappserver.entity.UserEntity;
@@ -9,29 +14,33 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
-public class MyUserDetailsService implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
-    public MyUserDetailsService(UserRepository userRepository){
+    public CustomUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(()->new UsernameNotFoundException("User not found with email : " + email));
+    @Transactional
+    public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+        UserEntity user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email or username: " + usernameOrEmail));
         return UserPrincipal.create(user);
     }
 
+    // This method is used by JWTAuthenticationFilter
+    @Transactional
     public UserDetails loadUserById(int id) {
         UserEntity user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "id", id)
-        );
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with id : " + id));
         return UserPrincipal.create(user);
     }
 
