@@ -1,5 +1,6 @@
 package ntduong.movieappserver.security;
 
+import lombok.extern.slf4j.Slf4j;
 import ntduong.movieappserver.security.service.CustomUserDetailsService;
 import ntduong.movieappserver.util.JwtTokenProvider;
 import org.slf4j.Logger;
@@ -18,9 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
-
-    private static final Logger logger = LoggerFactory.getLogger(JwtTokenAuthenticationFilter.class);
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
@@ -44,7 +44,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception ex) {
-            logger.error("Could not set user authentication in security context", ex);
+            log.error("Could not set user authentication in security context", ex);
         }
 
         filterChain.doFilter(request, response);

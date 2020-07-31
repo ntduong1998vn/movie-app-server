@@ -38,6 +38,16 @@ public class UserPrincipal implements UserDetails, OAuth2User {
         this.isEnable = true;
     }
 
+    public UserPrincipal(Integer id, String email, String name, String username, String password, Collection<? extends GrantedAuthority> authorities,boolean isEnable) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.username = username;
+        this.password = password;
+        this.authorities = authorities;
+        this.isEnable = isEnable;
+    }
+
     public static UserPrincipal create(UserEntity user) {
         List<GrantedAuthority> authorities = user.getRoles()
                 .stream()
@@ -51,7 +61,8 @@ public class UserPrincipal implements UserDetails, OAuth2User {
                 user.getName(),
                 user.getUsername(),
                 user.getPassword(),
-                authorities
+                authorities,
+                !user.isDeleteFlag()
         );
     }
 
