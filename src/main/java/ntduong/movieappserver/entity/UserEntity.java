@@ -57,7 +57,6 @@ public class UserEntity extends DateAudit {
     @Column(columnDefinition = "smallint")
     private AuthProvider provider;
 
-
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
@@ -71,6 +70,4 @@ public class UserEntity extends DateAudit {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     Set<Comment> comments;
-
-
 }

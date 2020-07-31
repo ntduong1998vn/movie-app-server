@@ -25,5 +25,7 @@ public class UserDTO {
     private String name;
     private String username;
     private String provider;
+    @JsonProperty("delete_flag")
+    private boolean deleteFlag;
     private List<RoleDTO> roles;
 }

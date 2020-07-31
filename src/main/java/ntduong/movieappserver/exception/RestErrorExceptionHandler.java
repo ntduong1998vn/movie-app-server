@@ -5,6 +5,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,7 +19,6 @@ import java.util.List;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class RestErrorExceptionHandler extends ResponseEntityExceptionHandler {
-
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(final MethodArgumentNotValidException ex, final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
@@ -35,7 +35,11 @@ public class RestErrorExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, apiError, headers, apiError.getStatus(), request);
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
+    @ExceptionHandler({
+            ResourceNotFoundException.class,
+            UsernameNotFoundException.class,
+            EntityNotFoundException.class
+    })
     protected ResponseEntity<Object> handleNoHandlerFoundException(RuntimeException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND);
         apiError.setMessage(ex.getMessage());
@@ -43,20 +47,22 @@ public class RestErrorExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex, final WebRequest request) {
-        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND);
-        apiError.setMessage(ex.getMessage());
-        return new ResponseEntity<>(apiError, apiError.getStatus());
-    }
-
     @ExceptionHandler({BadRequestException.class,
             EntityAlreadyExistException.class})
     protected ResponseEntity<Object> handleException(Exception exp) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
-        ;
         apiError.setMessage(exp.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Tất cả các Exception không được khai báo sẽ được xử lý tại đây
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleAllException(Exception ex, WebRequest request) {
+        // quá trình kiểm soat lỗi diễn ra ở đây
+        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+        apiError.setMessage(ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
 }
