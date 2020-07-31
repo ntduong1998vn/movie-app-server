@@ -68,7 +68,7 @@ public class UserService implements IUserService {
 
     @Override
     public Page<UserDTO> getUserList(String keyword, Pageable pageable) {
-        Page<UserEntity> userEntityList = null;
+        Page<UserEntity> userEntityList;
         if (StringUtils.isEmpty(keyword))
             userEntityList = userRepository.findAll(pageable);
         else
@@ -92,4 +92,5 @@ public class UserService implements IUserService {
         user.setDeleteFlag(userDTO.isDeleteFlag());
         userRepository.save(user);
     }
+
 }
