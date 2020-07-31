@@ -25,6 +25,8 @@ public final class StaticValue {
         FACEBOOK,
         GOOGLE,
         GITHUB
+
+
     }
 
     public enum Resolution {

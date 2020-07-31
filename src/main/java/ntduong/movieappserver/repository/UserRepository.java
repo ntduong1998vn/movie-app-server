@@ -1,7 +1,10 @@
 package ntduong.movieappserver.repository;
 
 import ntduong.movieappserver.entity.UserEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,4 +27,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
     Boolean existsByEmail(String email);
 
+    @Query("SELECT u " +
+            "FROM UserEntity u " +
+            "WHERE u.email LIKE CONCAT('%',UPPER(:keyword),'%')")
+    Page<UserEntity> findByUsername(String keyword, Pageable pageable);
 }

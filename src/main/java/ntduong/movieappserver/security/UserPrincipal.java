@@ -20,11 +20,9 @@ import java.util.stream.Collectors;
 public class UserPrincipal implements UserDetails, OAuth2User {
 
     private Integer id;
-    @JsonIgnore
     private String email;
     private String name;
     private String username;
-    @JsonIgnore
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
     private boolean isEnable;

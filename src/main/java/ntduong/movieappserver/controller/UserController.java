@@ -7,16 +7,25 @@ package ntduong.movieappserver.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import ntduong.movieappserver.dto.UserDTO;
 import ntduong.movieappserver.entity.UserEntity;
 import ntduong.movieappserver.exception.ResourceNotFoundException;
+import ntduong.movieappserver.payload.ApiResponse;
 import ntduong.movieappserver.repository.UserRepository;
 import ntduong.movieappserver.security.CurrentUser;
 import ntduong.movieappserver.security.UserPrincipal;
+import ntduong.movieappserver.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Api("User APIs")
 @RestController
@@ -24,13 +33,33 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     @Autowired
-    UserRepository userRepository;
+    IUserService userService;
 
     @ApiOperation("GET USERDETAIL BY USERNAME")
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
-    public UserEntity getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
-        return userRepository.findById(userPrincipal.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
+    public UserDTO getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
+        try {
+            UserDTO user = userService.findById(userPrincipal.getId());
+            return user;
+        } catch (UsernameNotFoundException e) {
+            throw e;
+        }
+    }
+
+    @ApiOperation("GET USER LIST \n ?keyword=gcltt10&page=0&size=5&sort=id,desc")
+    @GetMapping("/")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Page<UserDTO> getUserList(@RequestParam(defaultValue = "",required = false) String keyword,
+                                     Pageable pageable) {
+        return userService.getUserList(keyword,pageable);
+    }
+
+    @ApiOperation("Update Role and Status User")
+    @PutMapping("/")
+    public ApiResponse<String> update(@RequestBody UserDTO userDTO){
+        userService.updateRoleAndStatus(userDTO);
+
+        return new ApiResponse<>(HttpStatus.OK,"Cập nhật thành công");
     }
 }
