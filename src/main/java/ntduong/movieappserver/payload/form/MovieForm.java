@@ -1,6 +1,7 @@
 package ntduong.movieappserver.payload.form;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import java.util.List;
 @Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class MovieForm {
     private int id;
     private String title;
@@ -25,11 +27,11 @@ public class MovieForm {
     private String overview;
     private float popularity;
     private String language;
-    private MultipartFile poster;
     private int view;
     private String nation;
     private int adult;
     private boolean visible;
+    private MultipartFile poster = null;
 
     List<GenreDTO> genres = new ArrayList<>();
     List<CharacterDTO> characters = new ArrayList<>();

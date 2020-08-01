@@ -5,13 +5,16 @@ import io.swagger.annotations.ApiOperation;
 import ntduong.movieappserver.payload.ApiResponse;
 import ntduong.movieappserver.dto.MovieDTO;
 import ntduong.movieappserver.entity.Movie;
+import ntduong.movieappserver.payload.form.MovieForm;
 import ntduong.movieappserver.service.IMovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -50,7 +53,7 @@ public class MovieController {
                 apiResponse.setResult(result);
             } else {
                 apiResponse.setSuccess(HttpStatus.NOT_FOUND);
-                    apiResponse.setMessage("Không tìm thấy movie với Id: " + id);
+                apiResponse.setMessage("Không tìm thấy movie với Id: " + id);
             }
         } else {
             apiResponse.setSuccess(HttpStatus.BAD_REQUEST);
@@ -83,12 +86,13 @@ public class MovieController {
     }
 
     @ApiOperation("Add new movie")
-    @PostMapping("/")
-    public ApiResponse<String> saveMovie(@RequestBody MovieDTO movie) {
+    @PostMapping(value = "/",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<String> saveMovie(@ModelAttribute MovieForm movieForm) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
 
         try {
-            movieService.save(movie, false);
+            movieService.save(movieForm, false);
             apiResponse.setMessage("Success");
             apiResponse.setSuccess(HttpStatus.OK);
         } catch (Exception e) {
@@ -99,18 +103,22 @@ public class MovieController {
     }
 
     @ApiOperation("Update movie")
-    @PutMapping("/{movieId}")
-    public String update(@PathVariable int movieId, @RequestBody MovieDTO movie) {
-        boolean result = movieService.update(movieId, movie);
+    @PutMapping(value = "/{movieId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String update(@PathVariable int movieId, @ModelAttribute MovieForm movieForm) {
+        try {
+            movieService.save(movieForm, true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return "Thành công!";
     }
 
     @ApiOperation("Disable / Enable Movie")
     @GetMapping("/{movieId}/status/{value}")
     public ApiResponse<String> updateStatusMovie(@PathVariable int movieId,
-                                                 @PathVariable boolean value){
+                                                 @PathVariable boolean value) {
 
-        return new ApiResponse<>(HttpStatus.OK,"Cập nhật thành công!");
+        return new ApiResponse<>(HttpStatus.OK, "Cập nhật thành công!");
     }
 
     @DeleteMapping("/{id}")
