@@ -21,7 +21,7 @@ public class ReviewEntity implements Serializable {
     @Lob
     private String content;
     private LocalDateTime createAt;
-    private Double score;
+    private Float score;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "movie_id",nullable = false)

@@ -22,7 +22,7 @@ public class ReviewDTO {
     private String username;
     private String avatar;
     private String content;
-    private Double score;
+    private Float score;
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy hh:mm")
     private LocalDateTime createAt = LocalDateTime.now();
 }

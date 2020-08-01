@@ -63,4 +63,9 @@ public class UserController {
         return new ApiResponse<>(HttpStatus.OK,"Cập nhật thành công");
     }
 
+    @ApiOperation("GET USER BY ID")
+    @GetMapping("/{userId}")
+    public UserDTO findUserById(@PathVariable int userId){
+        return userService.findById(userId);
+    }
 }

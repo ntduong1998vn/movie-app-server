@@ -30,23 +30,6 @@ public class MovieDTO {
     int adult;
     boolean visible;
 
-    public MovieDTO(int id, String title, String quality, float imdb, int runtime, LocalDate release_date, String overview, float popularity, String language, String poster, int view, String nation, int adult, boolean visible) {
-        this.id = id;
-        this.title = title;
-        this.quality = quality;
-        this.imdb = imdb;
-        this.runtime = runtime;
-        this.release_date = release_date;
-        this.overview = overview;
-        this.popularity = popularity;
-        this.language = language;
-        this.poster = poster;
-        this.view = view;
-        this.nation = nation;
-        this.adult = adult;
-        this.visible = visible;
-    }
-
     List<GenreDTO> genres = new ArrayList<>();
     List<CharacterDTO> characters = new ArrayList<>();
     List<EpisodeDTO> episodes = new ArrayList<>();

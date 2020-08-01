@@ -22,5 +22,7 @@ public interface IMovieService {
 
     List<MovieDTO> searchCriteria(String search);
 
-    void save(MovieDTO movie,boolean isUpdate);
+    void save(MovieDTO movie,boolean isUpdate) throws IllegalArgumentException;
+
+    void updateStatus(int movieId,boolean visible);
 }

@@ -42,10 +42,11 @@ public class ActorService implements IActorService {
     public void add(ActorForm actorForm) throws IOException {
         MultipartFile imgFile = actorForm.getImage();
         ActorEntity actorEntity = new ActorEntity();
-        if (imgFile != null)
+        if (imgFile != null) {
             imageUtil.uploadImage(StaticValue.AVATAR, imgFile.getOriginalFilename(), imgFile.getContentType(), imgFile.getInputStream());
+            actorEntity.setAvatar(imgFile.getOriginalFilename());
+        }
         actorEntity.setName(actorForm.getName());
-        actorEntity.setAvatar(imgFile.getOriginalFilename());
         actorEntity.setNation(actorForm.getNation());
         actorRepository.save(actorEntity);
     }
