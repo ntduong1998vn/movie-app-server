@@ -2,8 +2,10 @@ package ntduong.movieappserver.service;
 
 import ntduong.movieappserver.dto.MovieDTO;
 import ntduong.movieappserver.entity.Movie;
+import ntduong.movieappserver.payload.form.MovieForm;
 import org.springframework.data.domain.Page;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface IMovieService {
@@ -22,7 +24,7 @@ public interface IMovieService {
 
     List<MovieDTO> searchCriteria(String search);
 
-    void save(MovieDTO movie,boolean isUpdate) throws IllegalArgumentException;
+    void save(MovieForm movieForm, boolean isUpdate) throws IllegalArgumentException, IOException;
 
     void updateStatus(int movieId,boolean visible);
 }

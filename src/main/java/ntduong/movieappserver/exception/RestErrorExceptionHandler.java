@@ -58,11 +58,11 @@ public class RestErrorExceptionHandler extends ResponseEntityExceptionHandler {
     /**
      * Tất cả các Exception không được khai báo sẽ được xử lý tại đây
      */
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleAllException(Exception ex, WebRequest request) {
-        // quá trình kiểm soat lỗi diễn ra ở đây
-        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
-        apiError.setMessage(ex.getMessage());
-        return new ResponseEntity<>(apiError, apiError.getStatus());
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<Object> handleAllException(Exception ex, WebRequest request) {
+//        // quá trình kiểm soat lỗi diễn ra ở đây
+//        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+//        apiError.setMessage(ex.getMessage());
+//        return new ResponseEntity<>(apiError, apiError.getStatus());
+//    }
 }

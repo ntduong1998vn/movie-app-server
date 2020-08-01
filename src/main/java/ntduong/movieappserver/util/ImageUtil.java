@@ -19,11 +19,6 @@ public class ImageUtil {
     @Autowired
     Bucket bucket;
 
-    public void uploadImage(String projectId, String bucketName, String fileName, String contentType, InputStream data) {
-        bucket.create(bucketName + fileName, data, contentType);
-        log.info("File " + fileName + " uploaded to bucket " + bucketName + " as " + fileName);
-    }
-
     public void uploadImage(String bucketName, String fileName, String contentType, InputStream data) {
         bucket.create(bucketName + fileName, data, contentType);
         log.info("File " + fileName + " uploaded to bucket " + bucketName + " as " + fileName);
