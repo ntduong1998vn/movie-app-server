@@ -59,6 +59,7 @@ public class ReviewService implements IReviewService {
             reviewEntity.setReviewMovie(optionalMovie.get());
             reviewEntity.setContent(reviewDTO.getContent());
             reviewEntity.setCreateAt(LocalDateTime.now());
+            reviewEntity.setScore(reviewDTO.getScore());
             reviewRepository.save(reviewEntity);
         } else throw new ValidationException("UserId or MovieId is not exist.");
     }

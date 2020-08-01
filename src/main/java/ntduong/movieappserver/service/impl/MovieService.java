@@ -7,6 +7,7 @@ import ntduong.movieappserver.dto.GenreDTO;
 import ntduong.movieappserver.dto.MovieDTO;
 import ntduong.movieappserver.entity.CharacterEntity;
 import ntduong.movieappserver.entity.GenreEntity;
+import ntduong.movieappserver.exception.EntityNotFoundException;
 import ntduong.movieappserver.exception.ResourceNotFoundException;
 import ntduong.movieappserver.entity.Movie;
 import ntduong.movieappserver.repository.GenreRepository;
@@ -20,9 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -99,6 +98,11 @@ public class MovieService implements IMovieService {
 
     @Override
     public boolean update(int movieId, MovieDTO movieDTO) {
+        Movie movie = movieRepository.findById(movieDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Movie", "id", movieDTO.getId()));
+
+
+        movieRepository.save(movie);
         return false;
     }
 
@@ -134,29 +138,61 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public void save(MovieDTO movie, boolean isUpdate) {
+    public void save(MovieDTO movieDTO, boolean isUpdate) throws IllegalArgumentException {
+        Movie movie;
         if (isUpdate) {
-            Movie oldMovie = movieRepository.findById(movie.getId()).orElse(null);
-            if (oldMovie == null)
-                throw new ResourceNotFoundException("MOVIE", "ID", movie.getId());
-            else {
-                modelMapper.map(movie, oldMovie);
-                movieRepository.save(oldMovie);
-            }
-        } else {
-            Movie newMovie = new Movie();
-            List<GenreDTO> genres = movie.getGenres();
-            for (GenreDTO genre : genres) {
-                Optional<GenreEntity> newGenre = genreRepository.findById(genre.getId());
-                if (newGenre.isPresent()) {
-                    newMovie.addGenre(newGenre.get());
-                } else throw new ResourceNotFoundException("GENRE", "ID", genre.getId());
+            movie = movieRepository.findById(movieDTO.getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("MOVIE", "ID", movieDTO.getId()));
+            // Edit genre association
+            List<Integer> genreIdList = movieDTO.getGenres()
+                    .stream()
+                    .map(GenreDTO::getId)
+                    .collect(Collectors.toList());
+            List<GenreEntity> updateGenreList = genreRepository.findAllById(genreIdList);
+
+            Set<GenreEntity> genreEntitySet = movie.getGenres();
+            // Remove genre if list updatedList not contain
+//            genreEntityList.removeIf(genreEntity -> !genreEntityList.contains(genreEntity));
+            final Iterator<GenreEntity> each = movie.getGenres().iterator();
+            while(each.hasNext()){
+                GenreEntity genreEntity = each.next();
+                if(!updateGenreList.contains(genreEntity)){
+                    genreEntity.removeMovie(movie);
+                }
             }
 
-            modelMapper.map(movie, newMovie);
-            movieRepository.save(newMovie);
+        } else {
+            movie = new Movie();
+            List<GenreDTO> genres = movieDTO.getGenres();
+            for (GenreDTO genre : genres) {
+                GenreEntity newGenre = genreRepository.findById(genre.getId())
+                        .orElseThrow(() -> new ResourceNotFoundException("GENRE", "ID", genre.getId()));
+                movie.addGenre(newGenre);
+            }
         }
+        // Set basic information of movie
+        movie.setTitle(movieDTO.getTitle());
+        movie.setQuality(movieDTO.getQuality());
+        movie.setRuntime(movieDTO.getRuntime());
+        movie.setImdb(movieDTO.getImdb());
+        movie.setReleaseDate(movieDTO.getRelease_date());
+        movie.setOverview(movieDTO.getOverview());
+        movie.setPopularity(movieDTO.getPopularity());
+        movie.setLanguage(movieDTO.getLanguage());
+        movie.setPoster(movieDTO.getPoster());
+        movie.setView(movieDTO.getView());
+        movie.setNation(movieDTO.getNation());
+        movie.setAdult(movieDTO.getAdult());
+        movie.setVisible(movieDTO.isVisible());
+        // Save
+        movieRepository.save(movie);
     }
 
-
+    @Override
+    public void updateStatus(int movieId, boolean visible) {
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new EntityNotFoundException("Movie", "Id", movieId));
+        movie.setVisible(visible);
+        movieRepository.save(movie);
+    }
 }

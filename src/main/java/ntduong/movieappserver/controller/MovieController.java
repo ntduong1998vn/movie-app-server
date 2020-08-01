@@ -100,12 +100,17 @@ public class MovieController {
 
     @ApiOperation("Update movie")
     @PutMapping("/{movieId}")
-    public ResponseEntity update(@PathVariable int movieId, @RequestBody MovieDTO movie) {
+    public String update(@PathVariable int movieId, @RequestBody MovieDTO movie) {
         boolean result = movieService.update(movieId, movie);
-        if (result)
-            return ResponseEntity.ok(new ApiResponse(HttpStatus.OK, "Update movie successfully!"));
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Error!"));
+        return "Thành công!";
+    }
+
+    @ApiOperation("Disable / Enable Movie")
+    @GetMapping("/{movieId}/status/{value}")
+    public ApiResponse<String> updateStatusMovie(@PathVariable int movieId,
+                                                 @PathVariable boolean value){
+
+        return new ApiResponse<>(HttpStatus.OK,"Cập nhật thành công!");
     }
 
     @DeleteMapping("/{id}")
