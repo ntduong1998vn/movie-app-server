@@ -15,6 +15,7 @@ import ntduong.movieappserver.payload.form.MovieForm;
 import ntduong.movieappserver.repository.GenreRepository;
 import ntduong.movieappserver.repository.MovieRepository;
 import ntduong.movieappserver.service.*;
+import ntduong.movieappserver.util.DateFormatUtil;
 import ntduong.movieappserver.util.ImageUtil;
 import ntduong.movieappserver.util.ObjectMapperUtil;
 import ntduong.movieappserver.util.SearchCriteria;
@@ -47,6 +48,7 @@ public class MovieService implements IMovieService {
     private final IReviewService reviewService;
     private final ModelMapper modelMapper;
     private final ImageUtil imageUtil;
+    private final DateFormatUtil dateFormat;
 
     // Skip association
     private MovieDTO entityToDto(Movie movie) {
@@ -152,7 +154,7 @@ public class MovieService implements IMovieService {
                     .orElseThrow(() -> new ResourceNotFoundException("MOVIE", "ID", movieForm.getId()));
             // Update poster
             MultipartFile imgFile = movieForm.getPoster();
-            if (imgFile != null || !imgFile.isEmpty()) {
+            if (imgFile != null) {
                 if (Objects.equals(imgFile.getContentType(), StaticValue.JPEG) ||
                         Objects.equals(imgFile.getContentType(), StaticValue.PNG)) {
                     if (imageUtil.deleteImage(StaticValue.POSTER, movie.getPoster())) {
@@ -165,14 +167,17 @@ public class MovieService implements IMovieService {
             }
 
             // Edit genre association
-//
+            updateGenreRelationship(movie, movieForm.getGenres());
         } else {
             movie = new Movie();
             List<GenreDTO> genres = movieForm.getGenres();
-            for (GenreDTO genre : genres) {
-                GenreEntity newGenre = genreRepository.findById(genre.getId())
-                        .orElseThrow(() -> new ResourceNotFoundException("GENRE", "ID", genre.getId()));
-                movie.addGenre(newGenre);
+            List<Integer> genreIdList = genres
+                    .stream()
+                    .map(GenreDTO::getId)
+                    .collect(Collectors.toList());
+            List<GenreEntity> genreEntityList = genreRepository.findAllById(genreIdList);
+            for (GenreEntity genreEntity : genreEntityList) {
+                movie.addGenre(genreEntity);
             }
             // Store image to image and save file name to database
             MultipartFile imgFile = movieForm.getPoster();
@@ -187,11 +192,10 @@ public class MovieService implements IMovieService {
         movie.setQuality(movieForm.getQuality());
         movie.setRuntime(movieForm.getRuntime());
         movie.setImdb(movieForm.getImdb());
-//        movie.setReleaseDate(movieForm.getRelease_date());
+        movie.setReleaseDate(dateFormat.stringToLocalDate(movieForm.getRelease_date(), StaticValue.YYYYMMDD));
         movie.setOverview(movieForm.getOverview());
         movie.setPopularity(movieForm.getPopularity());
         movie.setLanguage(movieForm.getLanguage());
-//        movie.setPoster(movieForm.getPoster());
         movie.setView(movieForm.getView());
         movie.setNation(movieForm.getNation());
         movie.setAdult(movieForm.getAdult());
@@ -208,7 +212,7 @@ public class MovieService implements IMovieService {
         movieRepository.save(movie);
     }
 
-    private void updateGenreRelationship(Movie movie, List<GenreDTO> updateList) {
+    private void updateGenreRelationship(Movie movie, List<GenreDTO> updateList) throws IllegalArgumentException {
         List<Integer> genreIdList = updateList
                 .stream()
                 .map(GenreDTO::getId)
@@ -217,12 +221,18 @@ public class MovieService implements IMovieService {
 
         Set<GenreEntity> currentSet = movie.getGenres();
         // Remove genre if list updatedList not contain
-//            genreEntityList.removeIf(genreEntity -> !genreEntityList.contains(genreEntity));
-        final Iterator<GenreEntity> each = currentSet.iterator();
+        Iterator<GenreEntity> each = currentSet.iterator();
         while (each.hasNext()) {
             GenreEntity genreEntity = each.next();
             if (!updateGenreList.contains(genreEntity)) {
                 genreEntity.removeMovie(movie);
+            }
+        }
+
+        // Add genre if currentGenreList not contain
+        for (GenreEntity genreEntity : updateGenreList) {
+            if (!currentSet.contains(genreEntity)) {
+                movie.addGenre(genreEntity);
             }
         }
     }

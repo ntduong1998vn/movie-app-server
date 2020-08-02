@@ -12,6 +12,7 @@ public final class StaticValue {
     public static final String JPEG = "image/jpeg";
     public static final String PNG = "image/png";
     public static final String EMPTY_STRING = "";
+    public static final String YYYYMMDD = "yyyy-MM-dd";
 
     public enum SourceType {
         YOUTUBE,
