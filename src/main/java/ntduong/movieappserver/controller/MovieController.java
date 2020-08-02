@@ -117,7 +117,7 @@ public class MovieController {
     @GetMapping("/{movieId}/status/{value}")
     public ApiResponse<String> updateStatusMovie(@PathVariable int movieId,
                                                  @PathVariable boolean value) {
-
+        
         return new ApiResponse<>(HttpStatus.OK, "Cập nhật thành công!");
     }
 

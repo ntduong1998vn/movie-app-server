@@ -34,6 +34,4 @@ public class MovieForm {
     private MultipartFile poster = null;
 
     List<GenreDTO> genres = new ArrayList<>();
-    List<CharacterDTO> characters = new ArrayList<>();
-    List<EpisodeDTO> episodes = new ArrayList<>();
 }

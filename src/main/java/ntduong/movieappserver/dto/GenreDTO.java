@@ -11,7 +11,6 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 public class GenreDTO {
-
     int id;
     @NotBlank(message = "Tên thể loại không được để trống")
     @Size(max = 45)

@@ -9,6 +9,8 @@ import org.hibernate.annotations.BatchSize;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -69,7 +71,7 @@ public class Movie implements Serializable {
     @BatchSize(size = 6)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    Set<GenreEntity> genres;
+    Set<GenreEntity> genres = new HashSet<>();
 
     @OneToMany(mappedBy = "movieComment",
             fetch = FetchType.LAZY,
@@ -77,7 +79,7 @@ public class Movie implements Serializable {
             orphanRemoval = true)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    List<Comment> movieComments;
+    List<Comment> movieComments = new ArrayList<>();
 
     @OneToMany(mappedBy = "movieEpisode",
             fetch = FetchType.LAZY,
@@ -85,7 +87,7 @@ public class Movie implements Serializable {
             orphanRemoval = true)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    List<EpisodeEntity> episodes;
+    List<EpisodeEntity> episodes = new ArrayList<>();
 
     @OneToMany(mappedBy = "movieCharacter",
             fetch = FetchType.LAZY,
@@ -93,7 +95,7 @@ public class Movie implements Serializable {
             orphanRemoval = true)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    List<CharacterEntity> characters;
+    List<CharacterEntity> characters = new ArrayList<>();
 
     public void addGenre(GenreEntity genreEntity) {
         this.genres.add(genreEntity);
