@@ -106,7 +106,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .permitAll()
                     .antMatchers("/api/user/checkUsernameAvailability", "/api/user/checkEmailAvailability")
                         .permitAll()
-                    .antMatchers(HttpMethod.GET,"/api/users/**")
+                    .antMatchers(HttpMethod.GET,"/api/user/**","/api/movie/**",
+                            "/api/comment/**","/api/genre/**","/api/reviews/**","/api/episode/**","/api/actors")
                         .permitAll()
                     .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**")
                         .permitAll()
@@ -127,7 +128,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .successHandler(oAuth2AuthenticationSuccessHandler)
                     .failureHandler(oAuth2AuthenticationFailureHandler);
 
-        // Thêm một lớp Filter kiểm tra jwt
+//         Thêm một lớp Filter kiểm tra jwt
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 

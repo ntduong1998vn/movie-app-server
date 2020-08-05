@@ -26,5 +26,5 @@ public interface IMovieService {
 
     void save(MovieForm movieForm, boolean isUpdate) throws IllegalArgumentException, IOException;
 
-    void updateStatus(int movieId,boolean visible);
+    void updateStatus(int movieId,boolean value);
 }

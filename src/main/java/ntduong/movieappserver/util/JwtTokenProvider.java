@@ -22,8 +22,6 @@ public class JwtTokenProvider {
 
     // Generate Token
     public String createToken(UserPrincipal userPrincipal) {
-        System.out.println(appProperties.getAuth().getTokenSecret() + appProperties.getAuth().getTokenExpirationMsec());
-
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
 
