@@ -107,4 +107,14 @@ public class FavoriteService implements IFavoriteService {
             favoriteRepository.save(favoriteEntity);
         } else throw new ResourceNotFoundException("FavoriteEntity", "Id", favoriteDTO.getId());
     }
+
+    @Override
+    public int getCurrentTime(int movieId, int userId) {
+        Optional<FavoriteEntity> optionalFavoriteEntity =
+                favoriteRepository.findByMoviesIdAndUsersId(movieId, userId);
+        if (optionalFavoriteEntity.isPresent()) {
+            return optionalFavoriteEntity.get().getCurrentTime();
+        }
+        return 0;
+    }
 }
