@@ -1,16 +1,16 @@
 package ntduong.movieappserver.service.impl;
 
+import com.google.common.base.Joiner;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ntduong.movieappserver.constant.StaticValue;
-import ntduong.movieappserver.dto.CharacterDTO;
 import ntduong.movieappserver.dto.GenreDTO;
 import ntduong.movieappserver.dto.MovieDTO;
-import ntduong.movieappserver.entity.CharacterEntity;
 import ntduong.movieappserver.entity.GenreEntity;
 import ntduong.movieappserver.exception.EntityNotFoundException;
 import ntduong.movieappserver.exception.ResourceNotFoundException;
 import ntduong.movieappserver.entity.Movie;
+import ntduong.movieappserver.mapper.MovieMapper;
 import ntduong.movieappserver.payload.form.MovieForm;
 import ntduong.movieappserver.repository.GenreRepository;
 import ntduong.movieappserver.repository.MovieRepository;
@@ -18,16 +18,16 @@ import ntduong.movieappserver.service.*;
 import ntduong.movieappserver.util.DateFormatUtil;
 import ntduong.movieappserver.util.ImageUtil;
 import ntduong.movieappserver.util.ObjectMapperUtil;
-import ntduong.movieappserver.util.SearchCriteria;
+import ntduong.movieappserver.util.searchMovie.MovieSpecificationsBuilder;
+import ntduong.movieappserver.util.searchMovie.SearchOperation;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -49,6 +49,7 @@ public class MovieService implements IMovieService {
     private final ModelMapper modelMapper;
     private final ImageUtil imageUtil;
     private final DateFormatUtil dateFormat;
+    private final MovieMapper movieMapper;
 
     // Skip association
     private MovieDTO entityToDto(Movie movie) {
@@ -131,19 +132,22 @@ public class MovieService implements IMovieService {
 
     @Override
     public List<MovieDTO> searchCriteria(String search) {
-        List<SearchCriteria> params = new ArrayList<SearchCriteria>();
-        Pattern pattern = Pattern.compile("(\\w+?)([:<>])(\\w+?),", Pattern.UNICODE_CHARACTER_CLASS);
+        MovieSpecificationsBuilder builder = new MovieSpecificationsBuilder();
+        String operationSetExper = Joiner.on('|').join(SearchOperation.SIMPLE_OPERATION_SET);
+//        Pattern pattern = Pattern.compile("(\\w+?)([:<>])(\\w+?),", Pattern.UNICODE_CHARACTER_CLASS);
+//        Matcher matcher = pattern.matcher(search + ",");
+        Pattern pattern = Pattern.compile("(\\w+?)(" + operationSetExper + ")(\\p{Punct}?)(\\w+?)(\\p{Punct}?),");
         Matcher matcher = pattern.matcher(search + ",");
         while (matcher.find()) {
-            params.add(new SearchCriteria(matcher.group(1), matcher.group(2), matcher.group(3)));
+            builder.with(matcher.group(1), matcher.group(2), matcher.group(4), matcher.group(3), matcher.group(5));
         }
 
-        List<Movie> result = movieRepository.searchMovie(params);
-        return Optional.ofNullable(result)
-                .map(list -> list.stream()
-                        .map(this::entityToDto)
-                        .collect(Collectors.toList()))
-                .orElse(null);
+        Specification<Movie> spec = builder.build();
+        List<Movie> result = movieRepository.findAll(spec);
+        if(!result.isEmpty()){
+            return movieMapper.toDto(result);
+        }
+        return null;
     }
 
     @Override

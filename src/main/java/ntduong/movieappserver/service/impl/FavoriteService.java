@@ -52,7 +52,7 @@ public class FavoriteService implements IFavoriteService {
                 FavoriteDTO favoriteDTO = new FavoriteDTO();
                 favoriteDTO.setId(favoriteEntity.getId());
                 favoriteDTO.setMovieId(favoriteEntity.getMoviesId());
-                favoriteDTO.setUserId(favoriteEntity.getMoviesId());
+                favoriteDTO.setUserId(favoriteEntity.getUsersId());
                 favoriteDTO.setCurrentTime(favoriteEntity.getCurrentTime());
                 favoriteDTO.setMovieTitle(StaticValue.EMPTY_STRING);
                 movieRepository.findById(favoriteEntity.getMoviesId())
