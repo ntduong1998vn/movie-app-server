@@ -117,4 +117,21 @@ public class FavoriteService implements IFavoriteService {
         }
         return 0;
     }
+
+    @Override
+    public FavoriteDTO checkExistInFavorite(int movieId, int userId) {
+        Optional<FavoriteEntity> optionalFavoriteEntity =
+                favoriteRepository.findByMoviesIdAndUsersId(movieId, userId);
+        if (optionalFavoriteEntity.isPresent()) {
+            FavoriteEntity result = optionalFavoriteEntity.get();
+            FavoriteDTO favoriteDTO = new FavoriteDTO();
+            favoriteDTO.setId(result.getId());
+            favoriteDTO.setMovieId(result.getMoviesId());
+            favoriteDTO.setUserId(result.getMoviesId());
+            favoriteDTO.setCurrentTime(result.getCurrentTime());
+            favoriteDTO.setMovieTitle(StaticValue.EMPTY_STRING);
+            return favoriteDTO;
+        }
+        return null;
+    }
 }

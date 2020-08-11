@@ -21,4 +21,6 @@ public interface IFavoriteService {
     void updateCurrentTime(FavoriteDTO favoriteDTO);
 
     int getCurrentTime(int movieId,int userId);
+
+    FavoriteDTO checkExistInFavorite(int movieId,int userId);
 }
