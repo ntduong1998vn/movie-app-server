@@ -3,10 +3,15 @@ package ntduong.movieappserver.util.searchMovie;
 import ntduong.movieappserver.entity.Movie;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MovieSpecificationsBuilder {
-    private List<SearchCriteria> params;
+    private final List<SearchCriteria> params;
+
+    public MovieSpecificationsBuilder() {
+        this.params = new ArrayList<>();
+    }
 
     public MovieSpecificationsBuilder with(
             String key, String operation, Object value, String prefix, String suffix) {

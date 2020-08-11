@@ -1,9 +1,6 @@
 package ntduong.movieappserver.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -12,6 +9,7 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class GenreDTO {
     int id;
     @NotBlank(message = "Tên thể loại không được để trống")

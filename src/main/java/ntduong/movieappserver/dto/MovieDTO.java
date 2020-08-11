@@ -1,6 +1,7 @@
 package ntduong.movieappserver.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,8 +20,9 @@ public class MovieDTO {
     String quality;
     float imdb;
     int runtime;
+    @JsonProperty("release_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    LocalDate release_date;
+    LocalDate releaseDate;
     String overview;
     float popularity;
     String language;
