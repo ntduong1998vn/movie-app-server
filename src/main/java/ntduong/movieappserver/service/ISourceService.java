@@ -13,5 +13,5 @@ public interface ISourceService {
 
     List<SourceDTO> findByEpisodeIdAndMovieId(int episodeId,int movieId);
 
-//    void delete
+    void addAll(int movieId,int episodeId,List<SourceDTO> sourceDTOList);
 }

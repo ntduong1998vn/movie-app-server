@@ -13,7 +13,7 @@ public final class StaticValue {
     public static final String PNG = "image/png";
     public static final String EMPTY_STRING = "";
     public static final String YYYYMMDD = "yyyy-MM-dd";
-
+    public static final String REGEX_PASSWORD = "^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$";
     public enum SourceType {
         YOUTUBE,
         JWPLAYER,

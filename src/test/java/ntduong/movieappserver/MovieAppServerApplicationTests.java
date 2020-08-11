@@ -1,5 +1,7 @@
 package ntduong.movieappserver;
 
+import ntduong.movieappserver.constant.StaticValue;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -10,4 +12,9 @@ class MovieAppServerApplicationTests {
     void contextLoads() {
     }
 
+    @Test
+    void checkRegexPassword(){
+        String pass = "Duong123";
+        Assertions.assertTrue(pass.matches(StaticValue.REGEX_PASSWORD));
+    }
 }

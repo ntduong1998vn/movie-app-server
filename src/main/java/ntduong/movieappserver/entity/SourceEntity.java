@@ -1,10 +1,9 @@
 package ntduong.movieappserver.entity;
 
 import lombok.Data;
-import ntduong.movieappserver.constant.StaticValue;
+import ntduong.movieappserver.constant.StaticValue.SourceType;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
@@ -30,7 +29,7 @@ public class SourceEntity implements Serializable {
 
     @Enumerated
     @Column(columnDefinition = "smallint",nullable = false)
-    StaticValue.SourceType server;
+    SourceType server;
 
     @Column(name = "src")
     private String src;

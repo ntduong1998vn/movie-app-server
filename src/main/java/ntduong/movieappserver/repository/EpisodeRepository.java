@@ -17,4 +17,5 @@ public interface EpisodeRepository extends JpaRepository<EpisodeEntity, EpisodeI
 
     @Query("SELECT e FROM EpisodeEntity e WHERE e.movieEpisode.id = :movieId ORDER BY e.episodeId.episodeId")
     List<EpisodeEntity> findByMovieId(@Param("movieId") int movieId);
+
 }

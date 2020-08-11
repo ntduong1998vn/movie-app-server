@@ -50,14 +50,14 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Object> register(@Valid @RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<Object> register(@RequestBody SignUpRequest signUpRequest) {
         UserDTO result = userService.create(signUpRequest);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
 //                .path("/api/user/{username}")
                 .path("/api/user/me")
                 .buildAndExpand(result.getUsername()).toUri();
-        return ResponseEntity.created(location).body(new ApiResponse(HttpStatus.CREATED, "Tạo thành công"));
+        return ResponseEntity.created(location).body(new ApiResponse<>(HttpStatus.CREATED, "Tạo thành công"));
     }
 
     @GetMapping("/authorities")
