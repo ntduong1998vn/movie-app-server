@@ -88,6 +88,13 @@ public class FavoriteController {
         return apiResponse;
     }
 
+    @ApiOperation("Get current time by movieId and userId")
+    @GetMapping("/{movieId}/current-time")
+    @PreAuthorize("hasRole('USER') or hasRole('USER_VIP') or hasRole('ADMIN')")
+    public int getCurrentTime(@CurrentUser UserPrincipal userPrincipal,
+                              @PathVariable int movieId){
+        return favoriteService.getCurrentTime(movieId,userPrincipal.getId());
+    }
 
     @ApiOperation("Remove movie")
     @DeleteMapping("/remove/{movieId}")

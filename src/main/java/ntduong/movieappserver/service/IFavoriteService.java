@@ -19,4 +19,6 @@ public interface IFavoriteService {
     void deleteByUserId(int movieId) ;
 
     void updateCurrentTime(FavoriteDTO favoriteDTO);
+
+    int getCurrentTime(int movieId,int userId);
 }
