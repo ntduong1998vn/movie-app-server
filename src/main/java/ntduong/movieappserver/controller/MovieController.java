@@ -79,8 +79,7 @@ public class MovieController {
 
     /// api/movie/advanced?search=title:do,imdb>35&sortBy=views:asc
     @GetMapping("/advanced")
-    List<MovieDTO> searchAdvanced(@RequestParam(name = "search", required = false) String search,
-                                  @RequestParam(name = "sortBy") String sortBy) {
+    List<MovieDTO> searchAdvanced(@RequestParam(name = "search", required = false) String search) {
         return movieService.searchCriteria(search);
     }
 

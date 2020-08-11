@@ -73,11 +73,6 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public List<Movie> findByTitle(String keyword) {
-        return movieRepository.findByTitleIgnoreCaseContaining(keyword);
-    }
-
-    @Override
     public void deleteById(int id) throws Exception {
         Movie movie = movieRepository.findById(id).orElse(null);
         if (movie != null) {

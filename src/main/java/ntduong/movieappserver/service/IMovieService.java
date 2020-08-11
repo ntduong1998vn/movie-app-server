@@ -20,8 +20,6 @@ public interface IMovieService {
 
     Page<MovieDTO> findByGenreId(int id, int page, int limit);
 
-    List<Movie> findByTitle(String keyword);
-
     List<MovieDTO> searchCriteria(String search);
 
     void save(MovieForm movieForm, boolean isUpdate) throws IllegalArgumentException, IOException;

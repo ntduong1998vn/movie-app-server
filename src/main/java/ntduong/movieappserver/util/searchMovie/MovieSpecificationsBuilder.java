@@ -40,14 +40,13 @@ public class MovieSpecificationsBuilder {
             return null;
         }
 
-        Specification result = new MovieSpecification(params.get(0));
+        Specification<Movie> result = new MovieSpecification(params.get(0));
 
 //        for (int i = 1; i < params.size(); i++) {
 //            result = params.get(i).isOrPredicate()
 //                    ? Specification.where(result).or(new UserSpecification(params.get(i)))
 //                    : Specification.where(result).and(new UserSpecification(params.get(i)));
 //        }
-
         return result;
     }
 
