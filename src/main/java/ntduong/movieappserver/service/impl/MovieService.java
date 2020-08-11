@@ -205,10 +205,10 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public void updateStatus(int movieId, boolean visible) {
+    public void updateStatus(int movieId, boolean value) {
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new EntityNotFoundException("Movie", "Id", movieId));
-        movie.setVisible(visible);
+        movie.setVisible(value);
         movieRepository.save(movie);
     }
 

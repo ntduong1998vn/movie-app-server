@@ -14,7 +14,7 @@ public interface IFavoriteService {
 
     void delete(int id) ;
 
-    void deleteByMovieId(int movieId) ;
+    void deleteByMovieId(int movieId,int userId) ;
 
     void deleteByUserId(int movieId) ;
 

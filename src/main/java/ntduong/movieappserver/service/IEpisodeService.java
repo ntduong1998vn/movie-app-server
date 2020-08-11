@@ -16,4 +16,7 @@ public interface IEpisodeService {
 
     EpisodeDTO findByEpisodeId(int episodeId,int movieId);
 
+    void addAll(List<EpisodeDTO> episodeDTOList);
+
+    List<EpisodeDTO> getAll(int movieId);
 }

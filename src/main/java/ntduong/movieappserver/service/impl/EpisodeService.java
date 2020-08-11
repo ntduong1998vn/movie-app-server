@@ -2,9 +2,11 @@ package ntduong.movieappserver.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import ntduong.movieappserver.dto.EpisodeDTO;
+import ntduong.movieappserver.dto.SourceDTO;
 import ntduong.movieappserver.entity.EpisodeEntity;
 import ntduong.movieappserver.entity.EpisodeId;
 import ntduong.movieappserver.entity.Movie;
+import ntduong.movieappserver.entity.SourceEntity;
 import ntduong.movieappserver.exception.EntityAlreadyExistException;
 import ntduong.movieappserver.exception.EntityNotFoundException;
 import ntduong.movieappserver.exception.ResourceNotFoundException;
@@ -38,14 +40,12 @@ public class EpisodeService implements IEpisodeService {
         else {
             Movie movie = movieRepository.findById(episodeDTO.getMovieId())
                     .orElseThrow(() -> new EntityNotFoundException("Movie", "Id", episodeDTO.getMovieId()));
-
-            EpisodeEntity newEpisodeEntity = new EpisodeEntity();
-            newEpisodeEntity.setEpisodeId(new EpisodeId(episodeDTO.getEpisodeId(), episodeDTO.getMovieId()));
-            newEpisodeEntity.setMovieEpisode(movie);
-
+            // Thêm tập mới
+            EpisodeEntity newEpisodeEntity = episodeMapper.toEntity(episodeDTO);
             episodeRepository.save(newEpisodeEntity);
+            // Thêm danh sách link
+            sourceService.addAll(episodeDTO.getMovieId(), episodeDTO.getEpisodeId(), episodeDTO.getSources());
         }
-
     }
 
     @Override
@@ -80,5 +80,26 @@ public class EpisodeService implements IEpisodeService {
         EpisodeDTO episodeDTO = episodeMapper.toDto(episodeEntity);
         episodeDTO.setSources(sourceService.findByEpisodeIdAndMovieId(episodeId, movieId));
         return episodeDTO;
+    }
+
+    @Override
+    public void addAll(List<EpisodeDTO> episodeDTOList) {
+        if (!episodeDTOList.isEmpty()) {
+            for (EpisodeDTO episodeDTO : episodeDTOList) {
+                this.add(episodeDTO);
+            }
+        }
+    }
+
+    @Override
+    public List<EpisodeDTO> getAll(int movieId) {
+        if (movieRepository.existsById(movieId)) {
+            List<EpisodeDTO> episodeDTOList = episodeMapper.toDto(episodeRepository.findByMovieId(movieId));
+            for (EpisodeDTO episodeDTO : episodeDTOList) {
+                List<SourceDTO> sourceDTOList = sourceService.findByEpisodeIdAndMovieId(episodeDTO.getEpisodeId(), movieId);
+                episodeDTO.setSources(sourceDTOList);
+            }
+            return episodeDTOList;
+        } else throw new EntityNotFoundException("Movie", "Id", movieId);
     }
 }

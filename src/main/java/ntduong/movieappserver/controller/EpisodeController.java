@@ -47,18 +47,19 @@ public class EpisodeController {
             throw new RuntimeException("Giá trị tìm kiếm không hợp lệ.");
     }
 
-    @ApiOperation("ADD NEW EPISODE TO MOVIE")
+    @ApiOperation("ADD NEW EPISODE LIST TO MOVIE")
     @PostMapping("/")
-    public ApiResponse<String> addNew(@RequestBody EpisodeDTO episodeDTO) {
+    public ApiResponse<String> addNew(@RequestBody List<EpisodeDTO> episodeDTOList) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
-        if (episodeDTO.getMovieId() > 0 && episodeDTO.getEpisodeId() > 0) {
-            episodeService.add(episodeDTO);
-            apiResponse.setMessage("Thêm thành công.");
-            apiResponse.setSuccess(HttpStatus.OK);
-        } else {
-            apiResponse.setSuccess(HttpStatus.BAD_REQUEST);
-            apiResponse.setMessage("Giá trị không hợp lệ.");
-        }
+        episodeService.addAll(episodeDTOList);
+        apiResponse.setMessage("Thêm thành công.");
+        apiResponse.setSuccess(HttpStatus.OK);
         return apiResponse;
+    }
+
+    @ApiOperation("GET ALL EPISODE AND SOURCE LIST")
+    @GetMapping("/getAll/{movieId}")
+    public List<EpisodeDTO> getAll(@PathVariable int movieId) {
+        return episodeService.getAll(movieId);
     }
 }

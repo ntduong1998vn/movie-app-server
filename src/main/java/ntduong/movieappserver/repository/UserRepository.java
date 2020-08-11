@@ -25,6 +25,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
     Boolean existsByUsername(String username);
 
+    @Query("SELECT COUNT(u) > 0 FROM UserEntity u WHERE UPPER(:email) = UPPER(u.email)")
     Boolean existsByEmail(String email);
 
     @Query("SELECT u " +

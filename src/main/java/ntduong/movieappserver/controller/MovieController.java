@@ -73,8 +73,7 @@ public class MovieController {
 
     @GetMapping("/search")
     List<Movie> searchByKeyword(@RequestParam(name = "keyword", defaultValue = "") String keyword) {
-        List<Movie> result = movieService.findByTitle(keyword);
-        return result;
+        return movieService.findByTitle(keyword);
     }
 
 
@@ -117,7 +116,7 @@ public class MovieController {
     @GetMapping("/{movieId}/status/{value}")
     public ApiResponse<String> updateStatusMovie(@PathVariable int movieId,
                                                  @PathVariable boolean value) {
-        
+        movieService.updateStatus(movieId,value);
         return new ApiResponse<>(HttpStatus.OK, "Cập nhật thành công!");
     }
 

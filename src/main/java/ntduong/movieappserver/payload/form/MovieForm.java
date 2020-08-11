@@ -1,12 +1,11 @@
 package ntduong.movieappserver.payload.form;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ntduong.movieappserver.dto.CharacterDTO;
-import ntduong.movieappserver.dto.EpisodeDTO;
 import ntduong.movieappserver.dto.GenreDTO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,5 +32,6 @@ public class MovieForm {
     private boolean visible;
     private MultipartFile poster = null;
 
-    List<GenreDTO> genres = new ArrayList<>();
+    @JsonProperty("genres")
+    private List<GenreDTO> genres = new ArrayList<>();
 }

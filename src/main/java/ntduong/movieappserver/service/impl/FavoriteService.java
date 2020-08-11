@@ -84,7 +84,11 @@ public class FavoriteService implements IFavoriteService {
     }
 
     @Override
-    public void deleteByMovieId(int movieId) {
+    public void deleteByMovieId(int movieId, int userId) {
+        Optional<FavoriteEntity> optionalFavoriteEntity = favoriteRepository.findByMoviesIdAndUsersId(movieId, userId);
+        if (optionalFavoriteEntity.isPresent()) {
+            favoriteRepository.delete(optionalFavoriteEntity.get());
+        } else throw new BadRequestException("Phim không có trong danh sách phim yêu thích!");
 
     }
 

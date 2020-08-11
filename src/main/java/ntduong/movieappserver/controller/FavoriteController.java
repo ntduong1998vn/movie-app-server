@@ -10,8 +10,11 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import ntduong.movieappserver.payload.ApiResponse;
 import ntduong.movieappserver.dto.FavoriteDTO;
+import ntduong.movieappserver.security.CurrentUser;
+import ntduong.movieappserver.security.UserPrincipal;
 import ntduong.movieappserver.service.IFavoriteService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -84,4 +87,15 @@ public class FavoriteController {
         }
         return apiResponse;
     }
+
+
+    @ApiOperation("Remove movie")
+    @DeleteMapping("/remove/{movieId}")
+    @PreAuthorize("hasRole('USER') or hasRole('USER_VIP') or hasRole('ADMIN')")
+    public ApiResponse<String> remove(@CurrentUser UserPrincipal userPrincipal,
+                                      @PathVariable int movieId){
+        favoriteService.deleteByMovieId(movieId,userPrincipal.getId());
+        return new ApiResponse<>(HttpStatus.OK,"Xóa phim yêu thích thành công!");
+    }
+
 }
