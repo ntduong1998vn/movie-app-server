@@ -70,13 +70,6 @@ public class MovieController {
         return movieService.findByGenreId(id, page, size);
     }
 
-
-    @GetMapping("/search")
-    List<Movie> searchByKeyword(@RequestParam(name = "keyword", defaultValue = "") String keyword) {
-        return movieService.findByTitle(keyword);
-    }
-
-
     /// api/movie/advanced?search=title:do,imdb>35&sortBy=views:asc
     @GetMapping("/advanced")
     List<MovieDTO> searchAdvanced(@RequestParam(name = "search", required = false) String search) {
