@@ -1,11 +1,15 @@
 package ntduong.movieappserver.controller;
 
 import lombok.RequiredArgsConstructor;
+import ntduong.movieappserver.constant.RoleNameEnum;
 import ntduong.movieappserver.dto.UserDTO;
+import ntduong.movieappserver.entity.RoleEntity;
+import ntduong.movieappserver.exception.EntityNotFoundException;
 import ntduong.movieappserver.payload.ApiResponse;
 import ntduong.movieappserver.dto.AuthResponse;
 import ntduong.movieappserver.payload.request.LoginRequest;
 import ntduong.movieappserver.payload.request.SignUpRequest;
+import ntduong.movieappserver.repository.RoleRepository;
 import ntduong.movieappserver.security.CurrentUser;
 import ntduong.movieappserver.security.UserPrincipal;
 import ntduong.movieappserver.service.impl.UserService;
@@ -33,7 +37,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider tokenProvider;
     private final UserService userService;
-
+    private final RoleRepository roleRepository;
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
@@ -47,6 +51,27 @@ public class AuthController {
 
         String jwt = tokenProvider.createToken((UserPrincipal) authentication.getPrincipal());
         return ResponseEntity.ok(new AuthResponse(jwt));
+    }
+
+    @PostMapping("/login-admin")
+    public ResponseEntity<?> authenticateAdmn(@RequestBody LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsernameOrEmail(),
+                        loginRequest.getPassword()
+                )
+        );
+        RoleEntity adminRole = roleRepository.findByName(RoleNameEnum.ROLE_ADMIN)
+                .orElseThrow(() -> new EntityNotFoundException("Role", "Name", "ROLE_ADMIN"));
+        Collection<? extends GrantedAuthority> roles = authentication.getAuthorities();
+        boolean result = roles.stream().anyMatch(role->role.getAuthority().equals("ROLE_ADMIN"));
+        if(result){
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            String jwt = tokenProvider.createToken((UserPrincipal) authentication.getPrincipal());
+            return ResponseEntity.ok(new AuthResponse(jwt));
+        }
+        return ResponseEntity.badRequest().body("Tài khoản bạn không có quyền truy cập!");
     }
 
     @PostMapping("/register")
