@@ -24,4 +24,6 @@ public class EmailService implements IEmailService {
         message.setText(text);
         emailSender.send(message);
     }
+
+
 }

@@ -107,7 +107,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/api/user/checkUsernameAvailability", "/api/user/checkEmailAvailability")
                         .permitAll()
                     .antMatchers(HttpMethod.GET,"/api/user/**","/api/movie/**",
-                            "/api/comment/**","/api/genre/**","/api/reviews/**","/api/episode/**","/api/actors")
+                            "/api/comment/**","/api/genre/**","/api/reviews/**","/api/episode/**","/api/actors/**","/api/user/reset-password/")
                         .permitAll()
                     .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**")
                         .permitAll()

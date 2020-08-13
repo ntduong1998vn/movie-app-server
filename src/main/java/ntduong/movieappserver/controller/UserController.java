@@ -16,11 +16,14 @@ import ntduong.movieappserver.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Locale;
 
 @Api("User APIs")
 @RestController
@@ -96,5 +99,18 @@ public class UserController {
     @PreAuthorize("hasRole('USER')")
     public void updateVip(@CurrentUser UserPrincipal userPrincipal) {
         userService.updateVipAndSendMail(userPrincipal.getId());
+    }
+
+    @ApiOperation("Reset password")
+    @PostMapping("/reset-password")
+    public void resetPassword(@RequestParam("email") String email) {
+        userService.forgetPassword(email);
+    }
+
+    @ApiOperation("Reset password")
+    @GetMapping("/changePassword")
+    public String showChangePasswordPage(Locale locale, @RequestParam("token") String token) {
+        userService.resetPassword(token);
+        return "Mật khẩu đã được đổi thành 123456";
     }
 }

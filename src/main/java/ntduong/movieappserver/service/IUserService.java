@@ -18,7 +18,13 @@ public interface IUserService {
 
     void updateRoleAndStatus(UserDTO userDTO);
 
-    void changePassword(int userId,ChangePasswordForm changePasswordForm) throws Exception;
+    void changePassword(int userId, ChangePasswordForm changePasswordForm) throws Exception;
 
     void updateVipAndSendMail(int userId);
+
+    void forgetPassword(String email);
+
+    String validatePasswordResetToken(String token);
+
+    boolean resetPassword(String token);
 }

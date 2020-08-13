@@ -6,6 +6,7 @@ import ntduong.movieappserver.constant.RoleNameEnum;
 import ntduong.movieappserver.constant.StaticValue;
 import ntduong.movieappserver.constant.StaticValue.AuthProvider;
 import ntduong.movieappserver.dto.UserDTO;
+import ntduong.movieappserver.entity.PasswordResetToken;
 import ntduong.movieappserver.entity.RoleEntity;
 import ntduong.movieappserver.entity.UserEntity;
 import ntduong.movieappserver.exception.BadRequestException;
@@ -15,16 +16,19 @@ import ntduong.movieappserver.mapper.RoleMapper;
 import ntduong.movieappserver.mapper.UserMapper;
 import ntduong.movieappserver.payload.form.ChangePasswordForm;
 import ntduong.movieappserver.payload.request.SignUpRequest;
+import ntduong.movieappserver.repository.PasswordTokenRepository;
 import ntduong.movieappserver.repository.RoleRepository;
 import ntduong.movieappserver.repository.UserRepository;
 import ntduong.movieappserver.service.IUserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.ServletContext;
 import javax.validation.ValidationException;
 import java.util.*;
 
@@ -39,6 +43,8 @@ public class UserService implements IUserService {
     private final UserMapper userMapper;
     private final RoleMapper roleMapper;
     private final EmailService emailService;
+    private final PasswordTokenRepository passwordTokenRepository;
+    private final ServletContext context;
 
     @Override
     public UserDTO create(SignUpRequest signUpRequest) {
@@ -127,7 +133,7 @@ public class UserService implements IUserService {
             throw e;
         }
     }
-    
+
     @Override
     public void updateVipAndSendMail(int userId) {
         UserEntity userEntity = userRepository.findById(userId)
@@ -138,5 +144,52 @@ public class UserService implements IUserService {
         userEntity.getRoles().add(userRole);
         userRepository.save(userEntity);
         emailService.sendSimpleMessage(userEntity.getEmail(), "WEBSITE XEM PHIM TRỰC TUYẾN", "XÁC NHẬN NÂNG CẤP TÀI KHOẢN VIP THÀNH CÔNG!");
+    }
+
+    @Override
+    public void forgetPassword(String email) {
+        UserEntity userEntity = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User", "email", email));
+        String token = UUID.randomUUID().toString();
+        this.createPasswordResetTokenForUser(userEntity, token);
+        String url = "localhost:8080/api/user/changePassword?token=" + token;
+        emailService.sendSimpleMessage(userEntity.getEmail(), "Reset Password", url);
+    }
+
+    @Override
+    public String validatePasswordResetToken(String token) {
+        PasswordResetToken passToken = passwordTokenRepository.findByToken(token);
+        return !isTokenFound(passToken) ? "invalidToken"
+                : isTokenExpired(passToken) ? "expired"
+                : null;
+    }
+
+    @Override
+    public boolean resetPassword(String token) {
+        String result = this.validatePasswordResetToken(token);
+        if (result==null) {
+            PasswordResetToken passToken = passwordTokenRepository.findByToken(token);
+            UserEntity userEntity = passToken.getUser();
+            userEntity.setPassword(passwordEncoder.encode("123456"));
+            userRepository.save(userEntity);
+            return true;
+        }
+        return false;
+    }
+
+    private void createPasswordResetTokenForUser(UserEntity user, String token) {
+        PasswordResetToken myToken = new PasswordResetToken(token, user);
+        Date now = new Date();
+        myToken.setExpiryDate(new Date(now.getTime() + PasswordResetToken.EXPIRATION));
+        passwordTokenRepository.save(myToken);
+    }
+
+    private boolean isTokenFound(PasswordResetToken passToken) {
+        return passToken != null;
+    }
+
+    private boolean isTokenExpired(PasswordResetToken passToken) {
+        final Calendar cal = Calendar.getInstance();
+        return passToken.getExpiryDate().before(cal.getTime());
     }
 }
