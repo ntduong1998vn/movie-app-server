@@ -1,8 +1,12 @@
 package ntduong.movieappserver.security.oauth2;
 
+import ntduong.movieappserver.constant.RoleNameEnum;
 import ntduong.movieappserver.constant.StaticValue.AuthProvider;
+import ntduong.movieappserver.entity.RoleEntity;
 import ntduong.movieappserver.entity.UserEntity;
+import ntduong.movieappserver.exception.EntityNotFoundException;
 import ntduong.movieappserver.exception.OAuth2AuthenticationProcessingException;
+import ntduong.movieappserver.repository.RoleRepository;
 import ntduong.movieappserver.repository.UserRepository;
 import ntduong.movieappserver.security.UserPrincipal;
 import ntduong.movieappserver.security.oauth2.user.OAuth2UserInfo;
@@ -17,6 +21,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -24,6 +29,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RoleRepository  roleRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
@@ -69,6 +76,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setName(oAuth2UserInfo.getName());
         user.setEmail(oAuth2UserInfo.getEmail());
         user.setImageUrl(oAuth2UserInfo.getImageUrl());
+        RoleEntity userRole = roleRepository.findByName(RoleNameEnum.ROLE_USER)
+                .orElseThrow(() -> new EntityNotFoundException("Role", "Name", "ROLE_USER"));
+        user.setRoles(Collections.singleton(userRole));
         return userRepository.save(user);
     }
 
