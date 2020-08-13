@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import ntduong.movieappserver.constant.StaticValue;
 import ntduong.movieappserver.dto.FavoriteDTO;
 import ntduong.movieappserver.entity.FavoriteEntity;
+import ntduong.movieappserver.entity.Movie;
+import ntduong.movieappserver.entity.UserEntity;
 import ntduong.movieappserver.exception.BadRequestException;
 import ntduong.movieappserver.exception.ResourceNotFoundException;
 import ntduong.movieappserver.repository.FavoriteRepository;
 import ntduong.movieappserver.repository.MovieRepository;
+import ntduong.movieappserver.repository.UserRepository;
 import ntduong.movieappserver.service.IFavoriteService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,7 @@ import java.util.stream.Collectors;
 public class FavoriteService implements IFavoriteService {
     private final FavoriteRepository favoriteRepository;
     private final MovieRepository movieRepository;
+    private final UserRepository userRepository;
 
     @Override
     public void add(FavoriteDTO favoriteDTO) throws BadRequestException {
@@ -99,12 +103,17 @@ public class FavoriteService implements IFavoriteService {
 
     @Override
     public void updateCurrentTime(FavoriteDTO favoriteDTO) {
-        Optional<FavoriteEntity> optionalFavoriteEntity =
-                favoriteRepository.findById(favoriteDTO.getId());
-        if (optionalFavoriteEntity.isPresent()) {
-            FavoriteEntity favoriteEntity = optionalFavoriteEntity.get();
-            favoriteEntity.setCurrentTime(favoriteDTO.getCurrentTime());
-            favoriteRepository.save(favoriteEntity);
+        Optional<Movie> optionalMovie = movieRepository.findById(favoriteDTO.getMovieId());
+        Optional<UserEntity> optionalUserEntity = userRepository.findById(favoriteDTO.getUserId());
+
+        if (optionalMovie.isPresent() && optionalUserEntity.isPresent()) {
+            Optional<FavoriteEntity> optionalFavoriteEntity =
+                    favoriteRepository.findByMoviesIdAndUsersId(favoriteDTO.getMovieId(), favoriteDTO.getUserId());
+            if (optionalFavoriteEntity.isPresent()) {
+                FavoriteEntity favoriteEntity = optionalFavoriteEntity.get();
+                favoriteEntity.setCurrentTime(favoriteDTO.getCurrentTime());
+                favoriteRepository.save(favoriteEntity);
+            } else throw new ResourceNotFoundException("FavoriteEntity", "Id", favoriteDTO.getId());
         } else throw new ResourceNotFoundException("FavoriteEntity", "Id", favoriteDTO.getId());
     }
 
