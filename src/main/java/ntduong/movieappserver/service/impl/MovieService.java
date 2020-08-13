@@ -126,7 +126,7 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public List<MovieDTO> searchCriteria(String search) {
+    public Page<MovieDTO> searchCriteria(String search, int page, int size) {
         MovieSpecificationsBuilder builder = new MovieSpecificationsBuilder();
         String operationSetExper = Joiner.on('|').join(SearchOperation.SIMPLE_OPERATION_SET);
 //        Pattern pattern = Pattern.compile("(\\w+?)([:<>])(\\w+?),", Pattern.UNICODE_CHARACTER_CLASS);
@@ -138,11 +138,8 @@ public class MovieService implements IMovieService {
         }
 
         Specification<Movie> spec = builder.build();
-        List<Movie> result = movieRepository.findAll(spec);
-        if(!result.isEmpty()){
-            return movieMapper.toDto(result);
-        }
-        return null;
+        Page<Movie> result = movieRepository.findAll(spec, PageRequest.of(page, size));
+        return result.map(movieMapper::toDto);
     }
 
     @Override

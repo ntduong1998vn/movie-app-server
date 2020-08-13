@@ -6,7 +6,6 @@ import ntduong.movieappserver.payload.form.MovieForm;
 import org.springframework.data.domain.Page;
 
 import java.io.IOException;
-import java.util.List;
 
 public interface IMovieService {
 
@@ -20,9 +19,9 @@ public interface IMovieService {
 
     Page<MovieDTO> findByGenreId(int id, int page, int limit);
 
-    List<MovieDTO> searchCriteria(String search);
+    Page<MovieDTO> searchCriteria(String search, int page, int size);
 
     void save(MovieForm movieForm, boolean isUpdate) throws IllegalArgumentException, IOException;
 
-    void updateStatus(int movieId,boolean value);
+    void updateStatus(int movieId, boolean value);
 }

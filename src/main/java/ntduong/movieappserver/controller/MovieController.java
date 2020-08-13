@@ -72,8 +72,12 @@ public class MovieController {
 
     /// api/movie/advanced?search=title:do,imdb>35&sortBy=views:asc
     @GetMapping("/advanced")
-    List<MovieDTO> searchAdvanced(@RequestParam(name = "search", required = false) String search) {
-        return movieService.searchCriteria(search);
+    Page<MovieDTO> searchAdvanced(
+            @RequestParam(name = "currentPage", defaultValue = "0") int page,
+            @RequestParam(name = "pageSize", defaultValue = "6") int size,
+            @RequestParam(name = "search", required = false) String search
+    ) {
+        return movieService.searchCriteria(search, page, size);
     }
 
     @ApiOperation("Add new movie")
@@ -108,7 +112,7 @@ public class MovieController {
     @GetMapping("/{movieId}/status/{value}")
     public ApiResponse<String> updateStatusMovie(@PathVariable int movieId,
                                                  @PathVariable boolean value) {
-        movieService.updateStatus(movieId,value);
+        movieService.updateStatus(movieId, value);
         return new ApiResponse<>(HttpStatus.OK, "Cập nhật thành công!");
     }
 
