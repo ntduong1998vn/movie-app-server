@@ -38,6 +38,7 @@ public class UserService implements IUserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final RoleMapper roleMapper;
+    private final EmailService emailService;
 
     @Override
     public UserDTO create(SignUpRequest signUpRequest) {
@@ -76,7 +77,7 @@ public class UserService implements IUserService {
             userEntityList = userRepository.findAll(pageable);
         else
             userEntityList = userRepository.findByUsername(keyword, pageable);
-        return userEntityList.map(userEntity -> userMapper.toDto(userEntity));
+        return userEntityList.map(userMapper::toDto);
     }
 
     @Override
@@ -102,7 +103,7 @@ public class UserService implements IUserService {
 
         List<RoleEntity> roleList = roleMapper.toEntity(userDTO.getRoles());
         user.getRoles().clear();
-        user.setRoles(new HashSet<RoleEntity>(roleList));
+        user.setRoles(new HashSet<>(roleList));
         user.setDeleteFlag(userDTO.isDeleteFlag());
         userRepository.save(user);
     }
@@ -126,11 +127,16 @@ public class UserService implements IUserService {
             throw e;
         }
     }
-
-    private void checkLength(String str, int maxLength) {
-        if (str == null || str.length() > maxLength) {
-            throw new ValidationException(String.format("Tối đa %d ký tự", maxLength));
-        }
+    
+    @Override
+    public void updateVipAndSendMail(int userId) {
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User", "id", userId));
+        RoleEntity userRole = roleRepository.findByName(RoleNameEnum.ROLE_USER_VIP)
+                .orElseThrow(() -> new EntityNotFoundException("Role", "Name", "ROLE_USER_VIP"));
+        userEntity.getRoles().clear();
+        userEntity.getRoles().add(userRole);
+        userRepository.save(userEntity);
+        emailService.sendSimpleMessage(userEntity.getEmail(), "WEBSITE XEM PHIM TRỰC TUYẾN", "XÁC NHẬN NÂNG CẤP TÀI KHOẢN VIP THÀNH CÔNG!");
     }
-
 }

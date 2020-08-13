@@ -76,9 +76,9 @@ public class UserController {
     @PutMapping("/changePassword/{userId}")
     public ResponseEntity<String> updatePassword(@CurrentUser UserPrincipal userPrincipal,
                                                  @RequestBody ChangePasswordForm changePasswordForm,
-                                                 @PathVariable int userId){
+                                                 @PathVariable int userId) {
         try {
-            userService.changePassword(userPrincipal.getId(),changePasswordForm);
+            userService.changePassword(userPrincipal.getId(), changePasswordForm);
             return ResponseEntity.ok("Cập nhật mật khẩu thành công.");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -89,5 +89,12 @@ public class UserController {
     @GetMapping("/{userId}")
     public UserDTO findUserById(@PathVariable int userId) {
         return userService.findById(userId);
+    }
+
+    @ApiOperation("Update User Vip")
+    @GetMapping("/update-vip")
+    @PreAuthorize("hasRole('USER')")
+    public void updateVip(@CurrentUser UserPrincipal userPrincipal) {
+        userService.updateVipAndSendMail(userPrincipal.getId());
     }
 }
